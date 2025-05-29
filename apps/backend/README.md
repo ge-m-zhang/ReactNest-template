@@ -68,8 +68,8 @@ To enable AWS features:
 
 ```env
 ENABLE_AWS=true
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS__ACCESS_KEY_ID=your_aws_access_key
+AWS__SECRET_ACCESS_KEY=your_aws_secret_key
 AWS_REGION=your_aws_region
 ```
 
@@ -82,7 +82,7 @@ Note: This is an optional feature and can be safely removed if not needed.
 pnpm install
 
 # Start development server
-pnpm start
+pnpm start:dev
 
 # Build for production
 pnpm build
