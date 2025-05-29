@@ -58,7 +58,7 @@ A modern full-stack template built with React, NestJS, and TypeScript, featuring
 pnpm install
 
 # Start development servers
-pnpm dev
+pnpm start
 
 # Build all packages and applications
 pnpm build
