@@ -1,5 +1,7 @@
 # React Nest Template
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ge-m-zhang/ReactNest-template)
+
 A modern full-stack template built with React, NestJS, and TypeScript, featuring a robust component library and development tools.
 
 ## 🚀 Features
