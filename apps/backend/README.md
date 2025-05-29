@@ -1,85 +1,99 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is the NestJS backend service for the React Nest Template. It provides RESTful APIs, authentication, and optional integrations.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- NestJS with TypeScript
+- RESTful API architecture
+- Google OAuth authentication
+- TypeORM for database management
+- JWT authentication
+- Optional integrations (OpenAI, AWS)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🔧 Required Setup
 
-## Project setup
+### 1. Environment Variables
 
-```bash
-$ pnpm install
-```
+Create a `.env` file in the `apps/backend` directory with the following required variables, refer to [.env.example] for details.
 
-## Compile and run the project
+### 2. Google OAuth Setup
 
-```bash
-# development
-$ pnpm run start
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a new project or select an existing one
+3. Enable Google+ API:
+   - Navigate to APIs & Services → Library
+   - Search for "Google+ API" and enable it
+4. Create OAuth 2.0 Credentials:
+   - Go to APIs & Services → Credentials
+   - Click Create Credentials → OAuth 2.0 Client ID
+   - Choose Web Application
+5. Configure Authorized Redirect URIs:
+   - Development: `http://localhost:4000/api/auth/google/callback`
+   - Production: `https://yourdomain.com/api/auth/google/callback`
+6. Copy the credentials to your `.env` file
 
-# watch mode
-$ pnpm run start:dev
+### 3. JWT Secret Setup
 
-# production mode
-$ pnpm run start:prod
-```
-
-## Run tests
+Generate a secure JWT secret using:
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-## Resources
+Add the generated secret to your `.env` file as `JWT_SECRET`.
 
-Check out a few resources that may come in handy when working with NestJS:
+## 🎯 Optional Features
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### OpenAI Integration
 
-## Support
+To enable OpenAI features:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. Add to `.env`:
 
-## Stay in touch
+```env
+ENABLE_OPENAI=true
+OPENAI_API_KEY=your_openai_api_key
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+2. Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys)
 
-## License
+Note: This is an experimental feature and can be safely removed if not needed.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### AWS Integration
+
+To enable AWS features:
+
+1. Add to `.env`:
+
+```env
+ENABLE_AWS=true
+AWS__ACCESS_KEY_ID=your_aws_access_key
+AWS__SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=your_aws_region
+```
+
+Note: This is an optional feature and can be safely removed if not needed.
+
+## 🛠️ Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm start:dev
+
+# Build for production
+pnpm build
+
+# Run tests
+pnpm test
+```
+
+## 🔐 Security Notes
+
+- Never commit `.env` files to version control
+- Regularly rotate your JWT secret in production
+- Keep your Google OAuth credentials secure
+- Use environment-specific configuration for production

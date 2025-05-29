@@ -1,5 +1,7 @@
 # React Nest Template
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ge-m-zhang/ReactNest-template)
+
 A modern full-stack template built with React, NestJS, and TypeScript, featuring a robust component library and development tools.
 
 ## 🚀 Features
@@ -21,6 +23,7 @@ A modern full-stack template built with React, NestJS, and TypeScript, featuring
   - Google OAuth integration
   - TypeORM for database management
   - JWT authentication
+  - Optional integrations (OpenAI, AWS)
 
 - **Development Tools**
   - PNPM for package management
@@ -74,6 +77,15 @@ pnpm --filter backend dev
 pnpm --filter storybook-react-ui dev
 ```
 
+## 🔧 Backend Setup
+
+The backend service requires some configuration before it can be used. Please refer to the [Backend README](./apps/backend/README.md) for detailed setup instructions, including:
+
+- Required environment variables
+- Google OAuth setup
+- JWT configuration
+- Optional feature setup (OpenAI, AWS)
+
 ## 🎨 UI Component Library
 
 The project includes a custom UI component library (@react-ui) with the following key components:
@@ -113,6 +125,7 @@ The project includes a custom UI component library (@react-ui) with the followin
 - **NestJS**: RESTful API setup with TypeORM
 - **Authentication**: Google OAuth integration
 - **Environment**: Configurable through .env files
+- **Optional Features**: OpenAI and AWS integrations can be enabled or removed as needed
 
 ## 🧪 Testing
 
@@ -140,13 +153,11 @@ docker build -f apps/frontend/Dockerfile -t frontend:${VERSION} .
 # Build backend image with dynamic version
 docker build -f apps/backend/Dockerfile -t backend:${VERSION} .
 
-
 # Run frontend container
 docker run -d --name frontend-${VERSION} -p 3000:3000 --env-file $(pwd)/apps/frontend/.env frontend:${VERSION}
 
 # Run backend container
 docker run -d --name backend-${VERSION} -p 4000:4000 --env-file $(pwd)/apps/backend/.env backend:${VERSION}
-
 ```
 
 ## 📝 License
