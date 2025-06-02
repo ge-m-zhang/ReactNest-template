@@ -21,7 +21,6 @@ A modern full-stack template built with React, NestJS, and TypeScript, featuring
   - NestJS with TypeScript
   - RESTful API architecture
   - Google OAuth integration
-  - TypeORM for database management
   - JWT authentication
   - Optional integrations (OpenAI, AWS)
 
@@ -122,7 +121,6 @@ The project includes a custom UI component library (@react-ui) with the followin
 
 ### Backend Configuration
 
-- **NestJS**: RESTful API setup with TypeORM
 - **Authentication**: Google OAuth integration
 - **Environment**: Configurable through .env files
 - **Optional Features**: OpenAI and AWS integrations can be enabled or removed as needed
