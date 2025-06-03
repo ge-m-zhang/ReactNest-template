@@ -7,7 +7,6 @@ This is the NestJS backend service for the React Nest Template. It provides REST
 - NestJS with TypeScript
 - RESTful API architecture
 - Google OAuth authentication
-- TypeORM for database management
 - JWT authentication
 - Optional integrations (OpenAI, AWS)
 
