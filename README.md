@@ -21,7 +21,6 @@ A modern full-stack template built with React, NestJS, and TypeScript, featuring
   - NestJS with TypeScript
   - RESTful API architecture
   - Google OAuth integration
-  - TypeORM for database management
   - JWT authentication
   - Optional integrations (OpenAI, AWS)
 
