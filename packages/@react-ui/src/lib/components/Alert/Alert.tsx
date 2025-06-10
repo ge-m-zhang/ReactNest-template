@@ -3,18 +3,6 @@ import React from 'react';
 /**
  * Alert Component
  *
- * A fully implemented alert component.
- *
- * @features
- * - Fully implemented with all planned features
- * - Customizable through props
- * - Accessible and responsive
- * - Styled with Tailwind CSS
- */
-
-/**
- * Alert Component
- *
  * A fully implemented alert component that displays messages with different variants.
  *
  * @features
