@@ -92,12 +92,15 @@ export interface FlexProps extends Omit<React.HTMLAttributes<HTMLElement>, 'as'>
 }
 
 export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
-  ({ className, direction, align, justify, wrap, gap, width, height, as, ...props }, ref) => {
+  (
+    { className, direction, align, justify, wrap, gap, width, height, grow, shrink, as, ...props },
+    ref,
+  ) => {
     const Component = as || 'div';
     const elementProps = {
       ref: ref as React.Ref<HTMLDivElement>,
       className: cn(
-        flexVariants({ direction, align, justify, wrap, gap, width, height }),
+        flexVariants({ direction, align, justify, wrap, gap, width, height, grow, shrink }),
         className,
       ),
       ...props,

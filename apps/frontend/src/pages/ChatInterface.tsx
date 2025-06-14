@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { apiClient } from '../api/api';
 import { chatMessagesState, userProfileState } from '../recoil/Object.recoil';
 import { ChatMessage } from '../types/types';
+import { Box, Button, Flex, Typography } from '@react-ui';
 
 const ChatInterface: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
@@ -15,12 +16,8 @@ const ChatInterface: React.FC = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const user = useRecoilValue(userProfileState);
-  // * Recoil State
   const [chatMessages, setChatMessages] = useRecoilState(chatMessagesState);
 
-  // Fetch messages on load
-  // todo
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: chatHistory, error } = useQuery({
     queryKey: ['messages', user?.userId],
     queryFn: async () => {
@@ -29,7 +26,7 @@ const ChatInterface: React.FC = () => {
       }
       return apiClient.getMessagesByUserId(user.userId);
     },
-    enabled: !!user?.userId, // Only run the query when userId exists
+    enabled: !!user?.userId,
   });
 
   useEffect(() => {
@@ -43,7 +40,6 @@ const ChatInterface: React.FC = () => {
     }
   }, [chatHistory, error, setChatMessages]);
 
-  // todo: refactor to antoher file
   const sendMessageMutation = useMutation({
     mutationFn: (message: string) => apiClient.sendMessageToGPT(JSON.stringify({ message })),
     onSuccess: (data) => {
@@ -58,7 +54,6 @@ const ChatInterface: React.FC = () => {
       };
 
       setChatMessages((oldMessages) => [...oldMessages, botMessage]);
-
       saveMessageMutation.mutate(botMessage);
     },
     onError: (err) => {
@@ -80,14 +75,11 @@ const ChatInterface: React.FC = () => {
     };
 
     setChatMessages((oldMessages) => [...oldMessages, userMessage]);
-
     sendToGPT(inputValue);
     setInputValue('');
-
     saveMessageMutation.mutate(userMessage);
   };
 
-  // todo: refactor to another file
   const saveMessageMutation = useMutation({
     mutationFn: async (message: ChatMessage) => {
       await apiClient.saveMessage(message);
@@ -99,19 +91,15 @@ const ChatInterface: React.FC = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    setShowScrollButton(false); // Hide the scroll button after scrolling
+    setShowScrollButton(false);
   };
 
   const handleScroll = () => {
     if (!chatContainerRef.current) return;
-
     const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-
-    // Show button if the user is not at the bottom
     setShowScrollButton(scrollHeight - scrollTop - clientHeight > 100);
   };
 
-  // scroll to bottom when new message is added by user
   useEffect(() => {
     if (chatMessages.length > 0) {
       const lastMessage = chatMessages[chatMessages.length - 1];
@@ -123,52 +111,52 @@ const ChatInterface: React.FC = () => {
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
-
     if (!chatContainer) return;
-
     chatContainer.addEventListener('scroll', handleScroll);
-    // eslint-disable-next-line consistent-return
     return () => {
       chatContainer.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
-    <div
-      className="flex flex-col bg-white rounded-lg shadow-lg h-full"
+    <Flex
+      direction="column"
+      className="bg-white rounded-md shadow-lg h-full"
       style={{ maxHeight: '90vh' }}
     >
-      {/* Display messages */}
-      <div
+      <Box
         ref={chatContainerRef}
-        className="flex-grow overflow-y-auto bg-gray-100 rounded-t-lg p-4 space-y-4 overflow-x-hidden"
+        background="gray"
+        padding="sm"
+        className="overflow-y-auto space-y-4 overflow-x-hidden rounded-t-md"
+        style={{ flex: 1 }}
       >
         {chatMessages.map((msg) => (
-          <div
-            key={msg.msgId}
-            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`${
-                msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-green-100 text-gray-700'
-              } p-3 rounded-lg max-w-xs break-words`}
+          <Flex key={msg.msgId} justify={msg.sender === 'user' ? 'end' : 'start'}>
+            <Box
+              background={msg.sender === 'user' ? 'primary' : 'success'}
+              padding="sm"
+              rounded="md"
+              className={`max-w-xs break-words ${
+                msg.sender === 'user' ? 'text-white' : 'text-gray-700'
+              }`}
             >
               <ReactMarkdown>{msg.message}</ReactMarkdown>
-            </div>
-          </div>
+            </Box>
+          </Flex>
         ))}
 
         {isPending && (
-          <div className="flex justify-start">
-            <div className="bg-gray-300 text-gray-700 p-3 rounded-lg max-w-xs">Thinking...</div>
-          </div>
+          <Flex justify="start">
+            <Box background="success" padding="sm" rounded="md" className="max-w-xs">
+              <Typography>Thinking...</Typography>
+            </Box>
+          </Flex>
         )}
         <div ref={messagesEndRef} />
 
-        {/* Scroll to Bottom Button */}
         {showScrollButton && (
-          <button
-            type="button"
+          <Button
             onClick={scrollToBottom}
             className="absolute bg-blue-300 text-white rounded-full shadow-lg hover:bg-blue-600"
             style={{
@@ -180,18 +168,23 @@ const ChatInterface: React.FC = () => {
             }}
           >
             ↓
-          </button>
+          </Button>
         )}
-      </div>
+      </Box>
 
-      {/* Input field for new message */}
-      <div className="w-full flex items-center bg-gray-100 p-2" style={{ height: '72px' }}>
+      <Box
+        display="flex"
+        background="gray"
+        padding="sm"
+        className="w-full items-center"
+        style={{ height: '72px' }}
+      >
         <input
           type="text"
           placeholder="Type a message..."
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === 'Enter') {
               e.preventDefault();
               handleSendMessage();
@@ -199,15 +192,14 @@ const ChatInterface: React.FC = () => {
           }}
           className="flex-grow p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button
-          type="button"
+        <Button
           onClick={handleSendMessage}
-          className="ml-2 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          className="ml-2 bg-blue-500 text-white hover:bg-blue-600"
         >
           Send
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Flex>
   );
 };
 
