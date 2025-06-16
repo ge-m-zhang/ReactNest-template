@@ -138,26 +138,8 @@ pnpm --filter backend test
 
 ## 🐳 Docker Support
 
-Both frontend and backend include Docker configurations for containerized deployment:
-
-### Building Images and Running Container
-
-```bash
-# Get version from package.json
-VERSION=$(node -p "require('./package.json').version")
-
-# Build frontend image with dynamic version
-docker build -f apps/frontend/Dockerfile -t frontend:${VERSION} .
-
-# Build backend image with dynamic version
-docker build -f apps/backend/Dockerfile -t backend:${VERSION} .
-
-# Run frontend container
-docker run -d --name frontend-${VERSION} -p 3000:3000 --env-file $(pwd)/apps/frontend/.env frontend:${VERSION}
-
-# Run backend container
-docker run -d --name backend-${VERSION} -p 4000:4000 --env-file $(pwd)/apps/backend/.env backend:${VERSION}
-```
+Both frontend and backend include Docker configurations for containerized deployment;
+See Dockfile in each folder for details.
 
 ## 📝 License
 
