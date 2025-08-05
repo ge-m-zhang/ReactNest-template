@@ -6,7 +6,7 @@
     "rootDir": "./src",
     "jsx": "react-jsx",
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "sourceMap": true,
     "composite": false,
     "module": "ESNext",
