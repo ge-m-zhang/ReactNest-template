@@ -1,17 +1,17 @@
-# @react-ui
+# @gmz/react-ui
 
 A React UI component library built with TypeScript and Tailwind CSS.
 
 ## Installation
 
 ```bash
-pnpm add github:ge-m-zhang/ReactNest-template#main
+npm install @gmz/react-ui
 ```
 
 ## Usage
 
 ```tsx
-import { Button, Alert, Badge, Box } from '@react-ui';
+import { Button, Alert, Badge, Box } from '@gmz/react-ui';
 
 function App() {
   return (
@@ -39,6 +39,24 @@ function App() {
 - **Badge** - Color-coded badges
 - **Box** - Flexible layout component
 - **ThemeProvider** - Dark/light mode support
+
+## Development
+
+This package is built with TypeScript and uses the following key dependencies:
+
+- `class-variance-authority` - For component variant management
+- `clsx` - For conditional className handling
+- `tailwind-merge` - For Tailwind CSS class merging
+
+## Scripts
+
+This project uses pnpm as the package manager. Available scripts:
+
+- `pnpm build` - Build the package
+- `pnpm dev` - Watch mode for development
+- `pnpm lint` - Run ESLint
+- `pnpm typecheck` - Type checking without emission
+- `pnpm clean` - Clean the dist directory
 
 ## License
 
