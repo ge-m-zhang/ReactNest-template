@@ -1,12 +1,15 @@
 {
-  "name": "@react-ui",
-  "version": "0.1",
+  "name": "@gmz/react-ui",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ge-m-zhang/ReactNest-template.git",
+    "url": "https://github.com/ge-m-zhang/ReactNest-template.git",
     "directory": "packages/@react-ui"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "exports": {
     ".": {
