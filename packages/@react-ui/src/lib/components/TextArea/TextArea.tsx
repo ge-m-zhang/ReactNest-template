@@ -126,8 +126,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     // Determine state based on error prop
     const state = error ? 'error' : stateProp || 'default';
 
-    // Generate ID if not provided - memoized to avoid re-computation
-    const textareaId = useMemo(() => id || `textarea-${useId()}`, [id]);
+    // Generate ID if not provided
+    const generatedId = useId();
+    const textareaId = id || `textarea-${generatedId}`;
     const helperId = useMemo(() => `${textareaId}-helper`, [textareaId]);
     const errorId = useMemo(() => `${textareaId}-error`, [textareaId]);
     const countId = useMemo(() => `${textareaId}-count`, [textareaId]);

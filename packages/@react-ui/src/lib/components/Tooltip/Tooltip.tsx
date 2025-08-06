@@ -203,8 +203,8 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
   ) => {
     const [internalOpen, setInternalOpen] = useState(defaultOpen);
     const [mounted, setMounted] = useState(false);
-    // Generate a unique ID for accessibility and ARIA attributes - memoized to avoid re-computation
-    const tooltipId = useMemo(() => `tooltip-${useId()}`, []);
+    // Generate a unique ID for accessibility and ARIA attributes
+    const tooltipId = `tooltip-${useId()}`;
     const triggerRef = useRef<HTMLElement>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<number>();
@@ -249,7 +249,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
         tooltipRef.current.style.top = `${top}px`;
         tooltipRef.current.style.left = `${left}px`;
       }
-    }, [isOpen, placement, content]);
+    }, [isOpen, placement]);
 
     // Mount effect
     useEffect(() => {

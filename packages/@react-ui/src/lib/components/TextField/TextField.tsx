@@ -139,8 +139,9 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const state = error ? 'error' : stateProp || 'default';
     const hasSymbol = Boolean(symbol);
 
-    // Generate ID if not provided - memoized to avoid re-computation
-    const inputId = useMemo(() => id || `textfield-${useId()}`, [id]);
+    // Generate ID if not provided
+    const generatedId = useId();
+    const inputId = id || `textfield-${generatedId}`;
     const helperId = useMemo(() => `${inputId}-helper`, [inputId]);
     const errorId = useMemo(() => `${inputId}-error`, [inputId]);
 
