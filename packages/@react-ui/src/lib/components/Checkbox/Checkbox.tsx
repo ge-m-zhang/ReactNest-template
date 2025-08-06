@@ -181,7 +181,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     },
     ref,
   ) => {
-    const [internalChecked, setInternalChecked] = useState<boolean>(checkedProp || false);
+    const [internalChecked, setInternalChecked] = useState<boolean>(checkedProp ?? false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     // Use controlled or uncontrolled state

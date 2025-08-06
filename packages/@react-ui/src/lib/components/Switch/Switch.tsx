@@ -273,7 +273,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
     },
     ref,
   ) => {
-    const [internalChecked, setInternalChecked] = useState<boolean>(checkedProp || false);
+    const [internalChecked, setInternalChecked] = useState<boolean>(checkedProp ?? false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     // Use controlled or uncontrolled state
