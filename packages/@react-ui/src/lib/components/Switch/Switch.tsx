@@ -321,7 +321,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
             aria-checked={!!checked}
             tabIndex={disabled ? -1 : 0}
             onKeyDown={(e) => {
-              if (e.key === ' ' || e.key === 'Enter') {
+              if (e.key === ' ') {
                 e.preventDefault();
                 handleSwitchClick(e as any);
               }

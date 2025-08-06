@@ -244,7 +244,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           aria-checked={indeterminate ? 'mixed' : checked ? 'true' : 'false'}
           tabIndex={disabled ? -1 : 0}
           onKeyDown={(e) => {
-            if (e.key === ' ' || e.key === 'Enter') {
+            if (e.key === ' ') {
               e.preventDefault();
               handleCheckboxClick(e as any);
             }
