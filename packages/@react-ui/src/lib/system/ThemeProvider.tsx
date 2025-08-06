@@ -1,7 +1,6 @@
 // packages/ui/src/lib/system/ThemeProvider.tsx
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import './globals.css';
 
 // Theme configuration (moved to TypeScript for JS access)
 export const themeConfig = {
