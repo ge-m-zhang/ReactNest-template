@@ -209,14 +209,14 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     const tooltipRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-    const abortControllerRef = useRef<AbortController | null>(null); // For async cleanup
+    const isMountedRef = useRef(false); // Ref-based mounted flag for reliable cleanup
 
     const isControlled = controlledOpen !== undefined;
     const isOpen = isControlled ? controlledOpen : internalOpen;
 
     const setOpen = (open: boolean) => {
-      // Prevent state updates if component is unmounted (signal is aborted)
-      if (abortControllerRef.current?.signal.aborted) return;
+      // Prevent state updates if component is unmounted - more reliable than AbortController
+      if (!isMountedRef.current) return;
 
       if (!isControlled) {
         setInternalOpen(open);
@@ -233,10 +233,8 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
       if (delay > 0) {
         timeoutRef.current = setTimeout(() => {
-          // Check if component is still mounted using abort signal
-          if (!abortControllerRef.current?.signal.aborted) {
-            setOpen(true);
-          }
+          // setOpen already handles mounted check - no race condition possible
+          setOpen(true);
         }, delay);
       } else {
         setOpen(true);
@@ -252,10 +250,8 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
       if (hideDelay > 0) {
         hideTimeoutRef.current = setTimeout(() => {
-          // Check if component is still mounted using abort signal
-          if (!abortControllerRef.current?.signal.aborted) {
-            setOpen(false);
-          }
+          // setOpen already handles mounted check - no race condition possible
+          setOpen(false);
         }, hideDelay);
       } else {
         setOpen(false);
@@ -271,15 +267,15 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       }
     }, [isOpen, placement]);
 
-    // Mount effect with AbortController-based cleanup
+    // Mount effect with ref-based cleanup for reliable race condition prevention
     useEffect(() => {
-      // Create new AbortController for this component instance
-      abortControllerRef.current = new AbortController();
+      // Set mounted flag immediately - no async operations
+      isMountedRef.current = true;
       setMounted(true);
 
       return () => {
-        // Abort all ongoing operations
-        abortControllerRef.current?.abort();
+        // Set mounted flag to false immediately - prevents any race conditions
+        isMountedRef.current = false;
 
         // Clear any pending timeouts
         if (timeoutRef.current) {
