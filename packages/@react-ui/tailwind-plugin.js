@@ -40,9 +40,10 @@ module.exports = plugin.withOptions(
         ];
       } catch (e) {
         // @gmzh/react-ui not found; skip adding its content path
-        // todo: more specific troubleshooting information
         console.warn(
-          '[react-ui/tailwind-plugin] Warning: @gmzh/react-ui not found. Skipping content path.',
+          '[react-ui/tailwind-plugin] Warning: @gmzh/react-ui not found. Skipping content path. ' +
+            'To fix, install @gmzh/react-ui (npm install @gmzh/react-ui). ' +
+            'Error code: REACT_UI_TAILWIND_PLUGIN_MISSING_PACKAGE',
         );
         contentPaths = [];
       }
