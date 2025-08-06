@@ -3,7 +3,7 @@
 import React, { forwardRef } from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { cn } from '../../tools/classNames';
-import { typographyVariants, variantElementMap, type TypographyVariant } from './typography.config';
+import { typographyVariants, variantElementMap } from './typography.config';
 
 /**
  * Typography Component

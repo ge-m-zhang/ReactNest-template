@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { apiClient } from '../api/api';
 import { chatMessagesState, userProfileState } from '../recoil/Object.recoil';
 import { ChatMessage } from '../types/types';
-import { Box, Button, Flex, Typography } from '@react-ui';
+import { Box, Button, Flex, Typography } from '@gmz/react-ui';
 
 const ChatInterface: React.FC = () => {
   const [inputValue, setInputValue] = useState('');

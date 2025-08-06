@@ -3,7 +3,7 @@ import React from 'react';
 
 import { apiClient } from '../api/api';
 import { GoogleLoginButton } from '../components/auth/GoogleLoginButton';
-import { Flex, Typography } from '@react-ui';
+import { Flex, Typography } from '@gmz/react-ui';
 
 export const LandingPage: React.FC = () => {
   const { error: pingError } = useQuery({
