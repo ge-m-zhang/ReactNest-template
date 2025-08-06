@@ -180,7 +180,7 @@ importers:
 
   apps/frontend:
     dependencies:
-      '@react-ui':
+      '@gmz/react-ui':
         specifier: workspace:*
         version: link:../../packages/@react-ui
       '@tanstack/react-query':
@@ -301,7 +301,7 @@ importers:
 
   apps/storybook-react-ui:
     dependencies:
-      '@react-ui':
+      '@gmz/react-ui':
         specifier: workspace:*
         version: link:../../packages/@react-ui
       react:
