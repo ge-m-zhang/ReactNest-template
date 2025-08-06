@@ -72,8 +72,25 @@ pnpm --filter frontend dev
 # Start backend development server
 pnpm --filter backend dev
 
-# Start Storybook
+# Start Storybook for component library
 pnpm --filter storybook-react-ui dev
+
+# Build and watch the UI library during development
+pnpm --filter @react-ui dev
+```
+
+### UI Component Development
+
+```bash
+# Explore components interactively
+pnpm --filter storybook-react-ui dev
+# Visit http://localhost:6006
+
+# Build the component library
+pnpm --filter @react-ui build
+
+# Test component library
+pnpm --filter @react-ui test
 ```
 
 ## 🔧 Backend Setup
@@ -87,29 +104,55 @@ The backend service requires some configuration before it can be used. Please re
 
 ## 🎨 UI Component Library
 
-The project includes a custom UI component library (@react-ui) with the following key components:
+The project includes a custom UI component library (@react-ui) with **13 fully implemented components** built for modern web applications. All components feature TypeScript support, accessibility compliance, and comprehensive Storybook documentation.
 
-- **Flex**: A flexible layout component with support for:
+### 🧩 Implemented Components
 
-  - Direction (row, column)
-  - Alignment and justification
-  - Gap spacing (xs to 3xl)
-  - Width and height utilities
-  - Flex grow/shrink properties
+**📋 Form Controls** - Complete form solution
 
-- **Typography**: Text components with:
+- **Button** - Multiple variants (contained, outlined, text), sizes, colors, icon support, and loading states
+- **TextField** - Text inputs with validation, symbols, helper text, and multiple input types
+- **TextArea** - Multi-line inputs with auto-resize, character counting, and flexible resizing
+- **Checkbox** - Customizable checkboxes with indeterminate state support and custom icons
+- **Switch** - Modern toggle switches with multiple sizes and colors
 
-  - Multiple heading levels (h1-h6)
-  - Body text variants
-  - Alignment options
-  - Responsive text sizing
+**📱 Layout & Structure** - Flexible layout system
 
-- **Button**: Feature-rich button component with:
-  - Multiple variants (contained, outlined, text)
-  - Color options
-  - Size variants
-  - Icon support
-  - Loading states
+- **Box** - Universal container with spacing, colors, layout utilities, borders, and shadows
+- **Flex** - Powerful flexbox component with direction, gap, alignment, wrapping, and responsive controls
+
+**🗂️ Navigation** - User-friendly navigation
+
+- **Tabs** - Tabbed interfaces with 3 variants (outlined, underlined, pills) and compound component pattern
+
+**💬 Feedback & Information** - Rich user interaction
+
+- **Alert** - Contextual feedback messages (success, error, warning, info) with proper styling
+- **Badge** - Status indicators and color-coded labels
+- **Tooltip** - Contextual information with 12 placement options, multiple triggers, and variants
+- **Spinner** - Loading indicators with multiple sizes, colors, and text positioning
+
+**📝 Typography** - Rich text system
+
+- **Typography** - Comprehensive text component with heading levels (h1-h6), variants, alignment, and styling options
+
+**⚙️ System**
+
+- **ThemeProvider** - Dark/light mode support with system preference detection
+
+### 🚧 Future Components (Planned)
+
+Additional components are planned for future releases, including Card, Modal, Table, Select, Radio, and more navigation components.
+
+### ✨ Key Features
+
+- **🎯 Accessibility First** - Full ARIA support, keyboard navigation, screen reader optimization
+- **🎨 Highly Customizable** - Multiple variants, sizes, colors, and states for every component
+- **📚 Interactive Documentation** - Comprehensive Storybook with live examples for all implemented components
+- **🔒 Type Safe** - Full TypeScript definitions with IntelliSense support
+- **🚀 Performance Optimized** - Tree-shakable imports, minimal bundle impact
+- **📱 Responsive Ready** - Mobile-first design with responsive utilities
+- **✅ Production Ready** - All listed components are fully implemented and tested
 
 ## 🔧 Configuration
 
@@ -156,15 +199,84 @@ This template is designed to evolve with your projects and provide a consistent 
 - **Sync stable components** back to the template repository
 - **Existing projects** receive updates via pnpm link or package versioning
 
-### Sharing with Existing Projects
+### Component Library Integration
 
 ```bash
-# Link local template UI library to an existing project
+# Link local UI library to existing projects
 cd /path/to/existing-project
 pnpm link /path/to/ReactNest-template/packages/@react-ui
 
-# Or add as a dependency with a GitHub reference
+# Or install from published package
+pnpm add @gmzh/react-ui
+
+# Or add as GitHub dependency
 pnpm add github:yourusername/ReactNest-template#main --filter @react-ui
+```
+
+### Using Components in Your App
+
+```tsx
+import {
+  Button,
+  TextField,
+  TextArea,
+  Alert,
+  Tooltip,
+  Switch,
+  Flex,
+  Box,
+  Typography,
+  Badge,
+} from '@gmzh/react-ui';
+
+function MyComponent() {
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  return (
+    <Box padding="lg" background="white" rounded="lg" shadow="md">
+      <Flex direction="column" gap="lg">
+        <Flex justify="between" align="center">
+          <Typography variant="h3">User Settings</Typography>
+          <Badge variant="success">Premium</Badge>
+        </Flex>
+
+        <Flex direction="column" gap="md">
+          <TextField
+            label="Display Name"
+            placeholder="Enter your name"
+            fullWidth
+            helperText="This will be visible to other users"
+          />
+
+          <TextArea
+            label="Bio"
+            placeholder="Tell us about yourself..."
+            rows={3}
+            maxLength={200}
+            showCharacterCount
+            fullWidth
+          />
+
+          <Flex gap="sm" align="center">
+            <Switch defaultChecked />
+            <Typography variant="body2">Email notifications</Typography>
+          </Flex>
+
+          {showSuccess && <Alert variant="success">Settings saved successfully!</Alert>}
+
+          <Flex gap="sm" justify="end">
+            <Button variant="outlined">Cancel</Button>
+            <Tooltip content="Save and apply changes">
+              <Button variant="contained" color="primary" onClick={() => setShowSuccess(true)}>
+                Save Changes
+              </Button>
+            </Tooltip>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Box>
+  );
+}
 ```
 
 ## 🚀 Next Steps
