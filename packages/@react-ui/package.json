@@ -31,14 +31,14 @@
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "fix:cjs": "node scripts/fix-cjs-extensions.js",
     "build:css": "tailwindcss -i ./src/lib/system/globals.css -o ./dist/styles.css --minify",
-    "copy:plugin": "cp src/tailwind-plugin.js dist/ && cp src/tailwind-plugin.js ./",
+    "copy:plugin": "cp tailwind-plugin.js dist/",
     "dev": "npm run dev:ts",
     "dev:ts": "tsc --watch",
     "dev:css": "tailwindcss -i ./src/lib/system/globals.css -o ./dist/styles.css --watch",
     "dev:concurrent": "concurrently \"npm run dev:ts\" \"npm run dev:css\"",
     "lint": "eslint \"**/*.ts*\"",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist dist-cjs styles.css tailwind-plugin.js"
+    "clean": "rm -rf dist dist-cjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
