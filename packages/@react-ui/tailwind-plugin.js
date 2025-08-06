@@ -4,6 +4,9 @@ const path = require('path');
 /**
  * Tailwind plugin for @gmzh/react-ui.
  *
+ * Automatically scans @gmzh/react-ui components for Tailwind classes and adds them to your build.
+ * Logging is environment-aware: detailed logs in development, silent in production.
+ *
  * @param {Object} [options] - Plugin options.
  * @param {string|string[]} [options.contentPath] - Optional: Override the default content path(s) to scan for Tailwind classes.
  */
@@ -35,16 +38,29 @@ module.exports = plugin.withOptions(
     } else {
       try {
         // Only scan package files
-        contentPaths = [
-          path.join(path.dirname(require.resolve('@gmzh/react-ui')), '**/*.{js,ts,jsx,tsx}'),
-        ];
+        const resolvedPath = require.resolve('@gmzh/react-ui');
+        const contentPath = path.join(path.dirname(resolvedPath), '**/*.{js,ts,jsx,tsx}');
+
+        // Basic validation: ensure we got a valid path
+        if (!resolvedPath || typeof resolvedPath !== 'string') {
+          throw new Error('Invalid resolved path');
+        }
+
+        // Log resolved path for debugging (in development)
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[react-ui/tailwind-plugin] Scanning components at: ${contentPath}`);
+        }
+
+        contentPaths = [contentPath];
       } catch (e) {
         // @gmzh/react-ui not found; skip adding its content path
-        console.warn(
-          '[react-ui/tailwind-plugin] Warning: @gmzh/react-ui not found. Skipping content path. ' +
-            'To fix, install @gmzh/react-ui (npm install @gmzh/react-ui). ' +
-            'Error code: REACT_UI_TAILWIND_PLUGIN_MISSING_PACKAGE',
-        );
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(
+            '[react-ui/tailwind-plugin] Warning: @gmzh/react-ui not found. Skipping content path. ' +
+              'To fix, install @gmzh/react-ui (npm install @gmzh/react-ui). ' +
+              'Error code: REACT_UI_TAILWIND_PLUGIN_MISSING_PACKAGE',
+          );
+        }
         contentPaths = [];
       }
     }
