@@ -36,7 +36,15 @@ export const createSyntheticChangeEvent = <T extends HTMLInputElement>(
   newValue: Partial<Pick<T, 'value' | 'checked'>>,
 ): React.ChangeEvent<T> => {
   if (!inputElement) {
-    throw new Error('Input element is required to create synthetic change event');
+    throw new Error(
+      `Cannot create synthetic change event: input element reference is ${
+        inputElement === null
+          ? 'null'
+          : typeof inputElement === 'undefined'
+          ? 'undefined'
+          : String(inputElement)
+      }`,
+    );
   }
 
   // Create a synthetic event that mimics a real ChangeEvent
@@ -84,4 +92,32 @@ export const createSyntheticValueChangeEvent = (
   value: string,
 ): React.ChangeEvent<HTMLInputElement> => {
   return createSyntheticChangeEvent(originalEvent, inputElement, { value });
+};
+
+/**
+ * Creates a wheel event handler for number inputs that prevents accidental value changes.
+ *
+ * When users scroll over a number input, browsers by default increment/decrement the value.
+ * This helper prevents that behavior while allowing normal page scrolling and preserving focus.
+ *
+ * @param onWheel - Optional original wheel event handler to call after preventing default
+ * @returns A wheel event handler that prevents number input value changes
+ *
+ * @example
+ * ```tsx
+ * <input
+ *   type="number"
+ *   onWheel={createNumberInputWheelHandler(originalOnWheel)}
+ * />
+ * ```
+ */
+export const createNumberInputWheelHandler = (
+  onWheel?: React.WheelEventHandler<HTMLInputElement>,
+): React.WheelEventHandler<HTMLInputElement> => {
+  return (e: React.WheelEvent<HTMLInputElement>) => {
+    // Prevent the number value from changing, but don't blur the input
+    // This allows users to scroll past the input without losing focus or changing values
+    e.preventDefault();
+    onWheel?.(e);
+  };
 };

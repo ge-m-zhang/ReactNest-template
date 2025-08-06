@@ -40,6 +40,7 @@ module.exports = plugin.withOptions(
         ];
       } catch (e) {
         // @gmzh/react-ui not found; skip adding its content path
+        // todo: more specific troubleshooting information
         console.warn(
           '[react-ui/tailwind-plugin] Warning: @gmzh/react-ui not found. Skipping content path.',
         );
