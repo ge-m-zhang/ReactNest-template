@@ -294,7 +294,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
         })}
 
         {/* Tooltip portal - ReactDOM.createPortal for proper layering */}
-        {typeof window !== 'undefined' &&
+        {mounted &&
           ReactDOM.createPortal(
             <div
               ref={(node) => {
