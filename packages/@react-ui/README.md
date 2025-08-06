@@ -1,280 +1,212 @@
 # @gmzh/react-ui
 
-A comprehensive React UI component library built with TypeScript, Tailwind CSS, and designed for modern web applications. Features a complete set of accessible, customizable components with full Storybook documentation.
+A comprehensive React UI component library built with TypeScript and Tailwind CSS, featuring accessible components.
 
-## Installation
+## Installation & Setup
 
 ```bash
 npm install @gmzh/react-ui
-# or
-pnpm add @gmzh/react-ui
-# or
-yarn add @gmzh/react-ui
 ```
 
-## Quick Start
+### Option 1: Zero Configuration (Recommended for beginners)
+
+Perfect if you don't have Tailwind CSS or want the simplest setup:
 
 ```tsx
-import { Button, Alert, TextField, Switch, Tooltip } from '@gmzh/react-ui';
+// Import the complete design system
+import '@gmzh/react-ui/styles'; //Import CSS once at the Entry point or Root App
+import { Button, TextField } from '@gmzh/react-ui';
 
 function App() {
   return (
-    <div className="p-6 space-y-4">
-      {/* Buttons with different variants */}
-      <Button variant="contained" color="primary">
-        Primary Action
-      </Button>
-
-      {/* Form inputs */}
-      <TextField label="Email" type="email" placeholder="Enter your email" fullWidth />
-
-      {/* Interactive components */}
-      <div className="flex items-center gap-3">
-        <Switch defaultChecked />
-        <span>Enable notifications</span>
-      </div>
-
-      {/* Feedback components */}
-      <Alert variant="success">Account created successfully!</Alert>
-
-      {/* Enhanced with tooltips */}
-      <Tooltip content="Click to save your changes">
-        <Button variant="outlined">Save Draft</Button>
-      </Tooltip>
+    <div>
+      <Button variant="contained">Get Started</Button>
+      <TextField label="Enter your name" />
     </div>
   );
 }
 ```
 
-## 🧩 Available Components
+**That's it!** You get everything:
 
-### Layout & Structure - Flexible layout system
+- Complete Tailwind CSS utilities
+- Custom color palette with CSS variables
+- Inter font family
+- Dark mode support
+- All component styles
 
-- **Box** - Universal container with spacing, colors, layout utilities, borders, and shadows
-- **Flex** - Powerful flexbox component with direction, gap, alignment, wrapping, and responsive controls
+### Option 2: Tailwind Integration (For existing Tailwind projects)
 
-### Navigation - User-friendly navigation
+If you already have Tailwind CSS configured, add our plugin for enhanced integration:
 
-- **Tabs** - Tabbed interfaces with 3 variants (outlined, underlined, pills) and compound component pattern
-
-### Form Controls - Complete form solution
-
-- **Button** - Multiple variants (contained, outlined, text), sizes, colors, icon support, and loading states
-- **TextField** - Text inputs with validation, symbols, helper text, and multiple input types
-- **TextArea** - Multi-line inputs with auto-resize, character counting, and flexible resizing
-- **Checkbox** - Customizable checkboxes with indeterminate state support and custom icons
-- **Switch** - Modern toggle switches with multiple sizes and colors
-
-### Typography - Rich text system
-
-- **Typography** - Comprehensive text component with heading levels (h1-h6), variants, alignment, and styling options
-
-### Feedback & Information - Rich user interaction
-
-- **Alert** - Contextual feedback messages (success, error, warning, info) with proper styling
-- **Badge** - Status indicators and color-coded labels
-
-- **Tooltip** - Contextual information with 12 placement options, multiple triggers, and variants
-- **Spinner** - Loading indicators with multiple sizes, colors, and text positioning
-
-### 🚧 Future Components (Planned)
-
-Additional components are planned for future releases, including Card, Modal, Table, Select, Radio, and more navigation components. All placeholder components marked with `@todo` in the codebase are not yet implemented.
-
-### Theme & System
-
-- **ThemeProvider** - Dark/light mode support with system preference detection
-
-## 🎨 Component Features
-
-### Accessibility First
-
-- Full ARIA support and keyboard navigation
-- Screen reader optimized
-- Focus management and visible focus indicators
-- Color contrast compliance
-
-### Customization
-
-- **Variants**: Multiple visual styles for each component
-- **Sizes**: Consistent sizing scale (xs, sm, md, lg, xl)
-- **Colors**: Full color palette with semantic meanings
-- **States**: Error, success, warning, disabled, loading states
-
-### Developer Experience
-
-- **TypeScript**: Full type safety and IntelliSense support
-- **Storybook**: Interactive documentation and component playground
-- **Consistent API**: Predictable prop patterns across all components
-- **Tree-shakable**: Import only what you need
-
-## 📚 Documentation
-
-Explore all components interactively in Storybook:
-
-```bash
-# Run Storybook locally
-pnpm --filter storybook-react-ui dev
+```js
+// tailwind.config.js (add the plugin to your existing config)
+module.exports = {
+  content: ['./src/**/*.{js,ts,jsx,tsx}'], // your existing content
+  plugins: [
+    require('@gmzh/react-ui/tailwind-plugin'), // Add this line
+  ],
+  // Your existing theme, colors, etc. remain unchanged
+};
 ```
 
-Each component includes:
+```tsx
+// Import the design system (includes additional colors and utilities)
+import '@gmzh/react-ui/styles';
+import { Button, TextField } from '@gmzh/react-ui';
 
-- **Interactive examples** with all variants and states
-- **Code snippets** for easy copy-paste
-- **Props documentation** with TypeScript definitions
-- **Accessibility guidelines** and usage patterns
+function App() {
+  return (
+    <div className="p-6 bg-gray-100">
+      {/* Your Tailwind classes work seamlessly */}
+      <Button variant="contained" color="blue">
+        Get Started
+      </Button>
+      <TextField label="Enter your name" />
+      {/* Plus access to extended color palette */}
+      <div className="bg-blue-main text-white p-4">Custom UI colors</div>
+    </div>
+  );
+}
+```
 
-## 🎯 Advanced Usage
+**Benefits**: Your existing Tailwind setup + our extended color system and utilities.
 
-### Form Integration
+## Usage Examples
+
+### Basic Components
 
 ```tsx
-import { TextField, TextArea, Checkbox, Switch, Button, Alert } from '@gmzh/react-ui';
+import { Button, Alert, TextField, Switch } from '@gmzh/react-ui';
+
+function MyApp() {
+  return (
+    <div className="p-6 space-y-4">
+      <Button variant="contained" color="blue">
+        Primary Button
+      </Button>
+
+      <TextField label="Email" type="email" placeholder="Enter your email" />
+
+      <Switch defaultChecked />
+
+      <Alert variant="success">Operation completed successfully!</Alert>
+    </div>
+  );
+}
+```
+
+### Form Example
+
+```tsx
+import { TextField, TextArea, Checkbox, Button } from '@gmzh/react-ui';
 
 function ContactForm() {
-  const [formData, setFormData] = useState({ name: '', message: '', terms: false });
-  const [showSuccess, setShowSuccess] = useState(false);
-
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <TextField
-        label="Name"
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        required
-        helperText="Enter your full name"
-        fullWidth
-      />
-
-      <TextArea
-        label="Message"
-        value={formData.message}
-        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-        rows={4}
-        maxLength={500}
-        showCharacterCount
-        autoResize
-        fullWidth
-      />
-
-      <div className="flex items-center gap-3">
-        <Checkbox
-          checked={formData.terms}
-          onChange={(e) => setFormData({ ...formData, terms: e.target.checked })}
-          required
-        />
-        <span>I agree to the terms and conditions</span>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <Switch defaultChecked />
-        <span>Subscribe to newsletter</span>
-      </div>
-
-      {showSuccess && <Alert variant="success">Your message has been sent successfully!</Alert>}
-
-      <Button type="submit" variant="contained" fullWidth>
-        Send Message
+    <form className="space-y-4">
+      <TextField label="Name" required />
+      <TextArea label="Message" rows={4} />
+      <Checkbox>I agree to the terms</Checkbox>
+      <Button type="submit" variant="contained">
+        Submit
       </Button>
     </form>
   );
 }
 ```
 
-### Layout Composition
+### Layout Components
 
 ```tsx
-import { Box, Flex, Typography, Button, Badge, Tabs } from '@gmzh/react-ui';
+import { Box, Flex, Typography } from '@gmzh/react-ui';
 
 function Dashboard() {
   return (
-    <Box padding="lg" background="white" rounded="lg" shadow="md">
-      <Flex direction="column" gap="lg">
-        <Flex justify="between" align="center">
-          <Typography variant="h2">Dashboard</Typography>
-          <Badge variant="success">Online</Badge>
-        </Flex>
-
-        <Tabs.Context defaultValue="overview" variant="underlined">
-          <Tabs.List>
-            <Tabs value="overview">Overview</Tabs>
-            <Tabs value="analytics">Analytics</Tabs>
-            <Tabs value="settings">Settings</Tabs>
-          </Tabs.List>
-
-          <Tabs.Content>
-            <Tabs.Panel value="overview">
-              <Flex direction="column" gap="md">
-                <Typography variant="body1">Welcome to your dashboard</Typography>
-                <Button variant="contained" color="primary">
-                  Get Started
-                </Button>
-              </Flex>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="analytics">
-              <Typography variant="body1">Analytics content goes here</Typography>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="settings">
-              <Typography variant="body1">Settings panel</Typography>
-            </Tabs.Panel>
-          </Tabs.Content>
-        </Tabs.Context>
+    <Box padding="lg" background="white" rounded="md">
+      <Flex direction="column" gap="md">
+        <Typography variant="h2">Dashboard</Typography>
+        <Typography variant="body1">Welcome back!</Typography>
       </Flex>
     </Box>
   );
 }
 ```
 
-## 🔧 Development
+## Available Components
 
-This package is built with modern tools and best practices:
+### Form Controls
 
-### Core Technologies
+- `Button` - Multiple variants and colors
+- `TextField` - Text inputs with validation
+- `TextArea` - Multi-line text inputs
+- `Checkbox` - Checkboxes with custom styling
+- `Switch` - Toggle switches
 
-- **TypeScript** - Type safety and developer experience
-- **Tailwind CSS** - Utility-first styling system
-- **Class Variance Authority** - Component variant management
-- **Storybook** - Component documentation and testing
+### Layout & Typography
 
-### Key Dependencies
+- `Box` - Flexible container component
+- `Flex` - Flexbox layout component
+- `Typography` - Text component with variants
 
-- `class-variance-authority` - Variant-based component styling
-- `tailwind-merge` - Intelligent Tailwind class merging
-- `@headlessui/react` - Unstyled accessible components
+### Feedback
 
-### Scripts
+- `Alert` - Status messages (success, error, warning, info)
+- `Badge` - Status indicators
+- `Spinner` - Loading indicators
+- `Tooltip` - Contextual information
+
+### Navigation
+
+- `Tabs` - Tabbed interfaces
+
+### System
+
+- `ThemeProvider` - Dark/light mode support
+
+## Dark Mode
+
+```tsx
+import { ThemeProvider } from '@gmzh/react-ui';
+
+function App() {
+  return <ThemeProvider defaultTheme="system">{/* Your components */}</ThemeProvider>;
+}
+```
+
+## Component Props
+
+All components support:
+
+- **Variants**: Different visual styles (`contained`, `outlined`, `text`)
+- **Sizes**: Consistent sizing (`xs`, `sm`, `md`, `lg`, `xl`)
+- **Colors**: Full palette (`blue`, `teal`, `green`, `red`, `gold`, etc.)
+- **States**: Error, disabled, loading states
+
+## TypeScript Support
+
+Full TypeScript support with autocomplete and type checking:
+
+```tsx
+import type { ButtonProps, AlertProps } from '@gmzh/react-ui';
+
+const MyButton: React.FC<ButtonProps> = (props) => {
+  return <Button {...props} />;
+};
+```
+
+## Development
 
 ```bash
 # Build the package
 pnpm build
 
-# Watch mode for development
+# Development mode
 pnpm dev
 
-# Run linting
-pnpm lint
-
-# Type checking
-pnpm typecheck
-
-# Clean build artifacts
-pnpm clean
-
-# Run Storybook
-pnpm storybook
+# Storybook documentation
+pnpm --filter storybook-react-ui dev
 ```
 
-## 🤝 Contributing
+## License
 
-We welcome contributions! Please see our contributing guidelines for:
-
-- Component design principles
-- Code style and conventions
-- Testing requirements
-- Documentation standards
-
-## 📝 License
-
-MIT - see LICENSE file for details
+MIT License - see LICENSE file for details.
