@@ -30,7 +30,7 @@ export { Sidebar } from './lib/components/Sidebar/Sidebar';
 export { Spinner } from './lib/components/Spinner/Spinner';
 export { Switch } from './lib/components/Switch/Switch';
 export { Table } from './lib/components/Table/Table';
-export { Tabs } from './lib/components/Tabs/Tabs';
+export { Tab, Tabs } from './lib/components/Tabs/Tabs';
 export { TextArea } from './lib/components/TextArea/TextArea';
 export { TextField } from './lib/components/TextField/TextField';
 export { Toast } from './lib/components/Toast/Toast';
