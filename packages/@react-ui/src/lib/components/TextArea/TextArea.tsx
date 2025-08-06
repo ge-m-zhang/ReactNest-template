@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import React, { forwardRef, useEffect, useId, useMemo, useRef } from 'react';
 import { cn } from '../../tools/classNames';
+import { getResizeStyle } from '../../tools/styleHelpers';
 
 /**
  * TextArea Component
@@ -202,10 +203,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           )}
           style={{
             // Fallback for resize if Tailwind classes don't work
-            ...(!autoResize && resizable === 'horizontal' && { resize: 'horizontal' }),
-            ...(!autoResize && resizable === 'vertical' && { resize: 'vertical' }),
-            ...(!autoResize && resizable === true && { resize: 'both' }),
-            ...(!autoResize && resizable === false && { resize: 'none' }),
+            ...getResizeStyle(autoResize, resizable),
             ...props.style,
           }}
           disabled={!!disabled}
