@@ -33,6 +33,9 @@ type TooltipPlacement =
   | 'right-start'
   | 'right-end';
 
+// Constants for better maintainability
+const VIEWPORT_MARGIN = 8; // Minimum distance from viewport edges
+
 const tooltipVariants = cva(
   'absolute z-50 px-3 py-2 text-sm rounded-md shadow-lg transition-opacity duration-200 pointer-events-none',
   {
@@ -174,8 +177,14 @@ const getTooltipPosition = (
   }
 
   // Keep tooltip within viewport bounds
-  top = Math.max(8, Math.min(top, viewportHeight + scrollY - tooltipRect.height - 8));
-  left = Math.max(8, Math.min(left, viewportWidth + scrollX - tooltipRect.width - 8));
+  top = Math.max(
+    VIEWPORT_MARGIN,
+    Math.min(top, viewportHeight + scrollY - tooltipRect.height - VIEWPORT_MARGIN),
+  );
+  left = Math.max(
+    VIEWPORT_MARGIN,
+    Math.min(left, viewportWidth + scrollX - tooltipRect.width - VIEWPORT_MARGIN),
+  );
 
   return { top, left };
 };
