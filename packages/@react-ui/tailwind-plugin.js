@@ -41,11 +41,6 @@ module.exports = plugin.withOptions(
         const resolvedPath = require.resolve('@gmzh/react-ui');
         const contentPath = path.join(path.dirname(resolvedPath), '**/*.{js,ts,jsx,tsx}');
 
-        // Basic validation: ensure we got a valid path
-        if (!resolvedPath || typeof resolvedPath !== 'string') {
-          throw new Error('Invalid resolved path');
-        }
-
         // Log resolved path for debugging (in development)
         if (process.env.NODE_ENV === 'development') {
           console.log(`[react-ui/tailwind-plugin] Scanning components at: ${contentPath}`);
