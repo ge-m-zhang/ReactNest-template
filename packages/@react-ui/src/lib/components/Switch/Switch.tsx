@@ -1,7 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import React, { createContext, forwardRef, useContext, useRef, useState } from 'react';
 import { cn } from '../../tools/classNames';
-import { createSyntheticCheckboxChangeEvent } from '../../tools/formEventHelpers';
 
 /**
  * Switch Component
@@ -283,32 +282,22 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
       event.preventDefault();
       event.stopPropagation();
 
-      if (!disabled) {
-        const newChecked = !checked;
-        setInternalChecked(newChecked);
-
-        // Trigger the input's onChange event
-        if (inputRef.current) {
-          const syntheticEvent = createSyntheticCheckboxChangeEvent(
-            event,
-            inputRef.current,
-            newChecked,
-          );
-
-          if (onChange) {
-            onChange(syntheticEvent);
-          }
-        }
+      if (!disabled && inputRef.current) {
+        // Trigger the actual input click which will handle state updates and onChange callback
+        inputRef.current.click();
       }
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newChecked = event.target.checked;
+
+      // Update internal state only in uncontrolled mode
       if (checkedProp === undefined) {
-        setInternalChecked(event.target.checked);
+        setInternalChecked(newChecked);
       }
-      if (onChange) {
-        onChange(event);
-      }
+
+      // Call onChange callback once with the real event
+      onChange?.(event);
     };
 
     return (
