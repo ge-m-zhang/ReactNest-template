@@ -209,14 +209,14 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     const tooltipRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-    const isMountedRef = useRef(true); // Track mounted state to prevent updates on unmounted component
+    const abortControllerRef = useRef<AbortController | null>(null); // For async cleanup
 
     const isControlled = controlledOpen !== undefined;
     const isOpen = isControlled ? controlledOpen : internalOpen;
 
     const setOpen = (open: boolean) => {
-      // Prevent state updates if component is unmounted
-      if (!isMountedRef.current) return;
+      // Prevent state updates if component is unmounted (signal is aborted)
+      if (abortControllerRef.current?.signal.aborted) return;
 
       if (!isControlled) {
         setInternalOpen(open);
@@ -225,13 +225,16 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     };
 
     const showTooltip = () => {
+      // Clear any pending hide timeout
       if (hideTimeoutRef.current) {
         clearTimeout(hideTimeoutRef.current);
         hideTimeoutRef.current = undefined;
       }
+
       if (delay > 0) {
         timeoutRef.current = setTimeout(() => {
-          if (isMountedRef.current) {
+          // Check if component is still mounted using abort signal
+          if (!abortControllerRef.current?.signal.aborted) {
             setOpen(true);
           }
         }, delay);
@@ -241,13 +244,16 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     };
 
     const hideTooltip = () => {
+      // Clear any pending show timeout
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = undefined;
       }
+
       if (hideDelay > 0) {
         hideTimeoutRef.current = setTimeout(() => {
-          if (isMountedRef.current) {
+          // Check if component is still mounted using abort signal
+          if (!abortControllerRef.current?.signal.aborted) {
             setOpen(false);
           }
         }, hideDelay);
@@ -265,14 +271,15 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       }
     }, [isOpen, placement]);
 
-    // Mount effect with comprehensive cleanup
+    // Mount effect with AbortController-based cleanup
     useEffect(() => {
+      // Create new AbortController for this component instance
+      abortControllerRef.current = new AbortController();
       setMounted(true);
-      isMountedRef.current = true;
 
       return () => {
-        // Mark component as unmounted to prevent state updates
-        isMountedRef.current = false;
+        // Abort all ongoing operations
+        abortControllerRef.current?.abort();
 
         // Clear any pending timeouts
         if (timeoutRef.current) {
