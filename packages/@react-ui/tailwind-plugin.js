@@ -37,9 +37,19 @@ module.exports = plugin.withOptions(
         : [options.contentPath];
     } else {
       try {
-        // Only scan package files
-        const resolvedPath = require.resolve('@gmzh/react-ui');
-        const contentPath = path.join(path.dirname(resolvedPath), '**/*.{js,ts,jsx,tsx}');
+        // Detect if we're running inside @gmzh/react-ui itself to avoid self-resolution
+        let contentBasePath;
+        if (
+          __dirname.includes(`${path.sep}@gmzh${path.sep}react-ui`) ||
+          path.basename(path.resolve(__dirname, '..')) === 'react-ui'
+        ) {
+          // Use local package path
+          contentBasePath = path.resolve(__dirname, '..');
+        } else {
+          // Use resolved package path
+          contentBasePath = path.dirname(require.resolve('@gmzh/react-ui'));
+        }
+        const contentPath = path.join(contentBasePath, '**/*.{js,ts,jsx,tsx}');
 
         // Log resolved path for debugging (in development)
         if (process.env.NODE_ENV === 'development') {
