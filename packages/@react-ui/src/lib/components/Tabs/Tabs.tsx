@@ -218,34 +218,34 @@ const TabList = forwardRef<HTMLDivElement, TabListProps>(
         startIndex: number,
         direction: 'forward' | 'backward',
       ): number => {
-        let index = startIndex;
-        const maxAttempts = tabInfo.length; // Prevent infinite loop
-        let attempts = 0;
-
-        do {
+        // Generate array of indices to check in the specified direction
+        const indices = Array.from({ length: tabInfo.length }, (_, i) => {
           if (direction === 'forward') {
-            index = (index + 1) % tabInfo.length;
+            return (startIndex + 1 + i) % tabInfo.length;
           } else {
-            index = index === 0 ? tabInfo.length - 1 : index - 1;
+            return (startIndex - 1 - i + tabInfo.length) % tabInfo.length;
           }
-          attempts++;
-        } while (tabInfo[index].disabled && attempts < maxAttempts);
+        });
 
-        return tabInfo[index].disabled ? currentIndex : index;
+        // Find the first enabled tab index
+        const enabledIndex = indices.find((index) => !tabInfo[index].disabled);
+
+        return enabledIndex !== undefined ? enabledIndex : currentIndex;
       };
 
       // Helper function to find first/last enabled tab
       const findEnabledTabAtEnd = (fromStart: boolean): number => {
-        if (fromStart) {
-          for (let i = 0; i < tabInfo.length; i++) {
-            if (!tabInfo[i].disabled) return i;
-          }
-        } else {
-          for (let i = tabInfo.length - 1; i >= 0; i--) {
-            if (!tabInfo[i].disabled) return i;
-          }
-        }
-        return currentIndex; // Fallback to current if all disabled
+        const enabledIndex = fromStart
+          ? tabInfo.findIndex((tab) => !tab.disabled)
+          : tabInfo
+              .slice()
+              .reverse()
+              .findIndex((tab) => !tab.disabled);
+
+        if (enabledIndex === -1) return currentIndex; // Fallback if all disabled
+
+        // For reversed search, convert back to original index
+        return fromStart ? enabledIndex : tabInfo.length - 1 - enabledIndex;
       };
 
       switch (event.key) {

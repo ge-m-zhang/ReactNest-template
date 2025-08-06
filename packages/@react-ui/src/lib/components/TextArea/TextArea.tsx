@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import React, { forwardRef, useEffect, useId } from 'react';
+import React, { forwardRef, useEffect, useId, useMemo, useRef } from 'react';
 import { cn } from '../../tools/classNames';
 
 /**
@@ -126,12 +126,11 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     // Determine state based on error prop
     const state = error ? 'error' : stateProp || 'default';
 
-    // Generate ID if not provided
-    const generatedId = useId();
-    const textareaId = id || `textarea-${generatedId}`;
-    const helperId = `${textareaId}-helper`;
-    const errorId = `${textareaId}-error`;
-    const countId = `${textareaId}-count`;
+    // Generate ID if not provided - memoized to avoid re-computation
+    const textareaId = useMemo(() => id || `textarea-${useId()}`, [id]);
+    const helperId = useMemo(() => `${textareaId}-helper`, [textareaId]);
+    const errorId = useMemo(() => `${textareaId}-error`, [textareaId]);
+    const countId = useMemo(() => `${textareaId}-count`, [textareaId]);
 
     // Character count logic
     const currentLength = typeof value === 'string' ? value.length : 0;
@@ -140,22 +139,36 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
     const characterCountState = isOverLimit ? 'error' : isNearLimit ? 'warning' : 'default';
 
-    // Auto-resize functionality
+    // Track scroll height to avoid unnecessary recalculations
+    const scrollHeightRef = useRef<number | null>(null);
+
+    // Auto-resize functionality - optimized to avoid unnecessary DOM updates
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       if (autoResize) {
         const textarea = e.target;
         textarea.style.height = 'auto';
-        textarea.style.height = `${textarea.scrollHeight}px`;
+        const newScrollHeight = textarea.scrollHeight;
+
+        // Only update if scrollHeight changed
+        if (scrollHeightRef.current !== newScrollHeight) {
+          textarea.style.height = `${newScrollHeight}px`;
+          scrollHeightRef.current = newScrollHeight;
+        }
       }
       onChange?.(e);
     };
 
-    // Auto-resize effect for controlled components
+    // Auto-resize effect for controlled components - optimized to avoid unnecessary recalculations
     useEffect(() => {
       if (autoResize && ref && 'current' in ref && ref.current) {
         const textarea = ref.current;
+        // Only update if scrollHeight changed
         textarea.style.height = 'auto';
-        textarea.style.height = `${textarea.scrollHeight}px`;
+        const newScrollHeight = textarea.scrollHeight;
+        if (scrollHeightRef.current !== newScrollHeight) {
+          textarea.style.height = `${newScrollHeight}px`;
+          scrollHeightRef.current = newScrollHeight;
+        }
       }
     }, [value, autoResize, ref]);
 

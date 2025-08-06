@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import React, { forwardRef, useEffect, useId, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { cn } from '../../tools/classNames';
 import ReactDOM from 'react-dom';
 
@@ -203,8 +203,8 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
   ) => {
     const [internalOpen, setInternalOpen] = useState(defaultOpen);
     const [mounted, setMounted] = useState(false);
-    // Generate a unique ID for accessibility and ARIA attributes
-    const tooltipId = `tooltip-${useId()}`;
+    // Generate a unique ID for accessibility and ARIA attributes - memoized to avoid re-computation
+    const tooltipId = useMemo(() => `tooltip-${useId()}`, []);
     const triggerRef = useRef<HTMLElement>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<number>();

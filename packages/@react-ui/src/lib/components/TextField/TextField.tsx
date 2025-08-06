@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import React, { forwardRef, useId } from 'react';
+import React, { forwardRef, useId, useMemo } from 'react';
 import { cn } from '../../tools/classNames';
 
 /**
@@ -139,15 +139,14 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const state = error ? 'error' : stateProp || 'default';
     const hasSymbol = Boolean(symbol);
 
-    // Generate ID if not provided
-    const generatedId = useId();
-    const inputId = id || `textfield-${generatedId}`;
-    const helperId = `${inputId}-helper`;
-    const errorId = `${inputId}-error`;
+    // Generate ID if not provided - memoized to avoid re-computation
+    const inputId = useMemo(() => id || `textfield-${useId()}`, [id]);
+    const helperId = useMemo(() => `${inputId}-helper`, [inputId]);
+    const errorId = useMemo(() => `${inputId}-error`, [inputId]);
 
     // Custom wheel handler for number inputs
     // Prevents accidental number changes while scrolling, but allows normal page scrolling
-    const handleWheel = (e: React.WheelEvent<HTMLInputElement>) => {
+    const handleNumberInputWheel = (e: React.WheelEvent<HTMLInputElement>) => {
       if (type === 'number') {
         // Prevent the number value from changing, but don't blur the input
         // This allows users to scroll past the input without losing focus or changing values
@@ -193,7 +192,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
               className,
             )}
             disabled={!!disabled}
-            onWheel={handleWheel}
+            onWheel={handleNumberInputWheel}
             aria-invalid={error ? 'true' : 'false'}
             aria-describedby={
               [error && errorId, helperText && !error && helperId].filter(Boolean).join(' ') ||
