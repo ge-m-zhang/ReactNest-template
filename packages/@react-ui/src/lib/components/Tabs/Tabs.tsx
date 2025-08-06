@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import React, { createContext, forwardRef, useContext, useState } from 'react';
+import React, { createContext, forwardRef, useContext, useRef, useState } from 'react';
 import { cn } from '../../tools/classNames';
 
 /**
@@ -187,7 +187,114 @@ interface TabListProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const TabList = forwardRef<HTMLDivElement, TabListProps>(
   ({ className, orientation = 'horizontal', children, ...props }, ref) => {
-    const { variant } = useContext(TabContext);
+    const { variant, value, setValue } = useContext(TabContext);
+
+    // Get all tab values and their disabled states from children
+    const getTabInfo = (): Array<{ value: string; disabled: boolean }> => {
+      const tabInfo: Array<{ value: string; disabled: boolean }> = [];
+      React.Children.forEach(children, (child) => {
+        if (React.isValidElement(child) && child.props.value) {
+          tabInfo.push({
+            value: child.props.value,
+            disabled: Boolean(child.props.disabled),
+          });
+        }
+      });
+      return tabInfo;
+    };
+
+    // Handle keyboard navigation
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      const tabInfo = getTabInfo();
+      const currentIndex = tabInfo.findIndex((tab) => tab.value === value);
+
+      if (currentIndex === -1) return;
+
+      let nextIndex = currentIndex;
+      let shouldPreventDefault = false;
+
+      // Helper function to find next non-disabled tab
+      const findNextEnabledTab = (
+        startIndex: number,
+        direction: 'forward' | 'backward',
+      ): number => {
+        let index = startIndex;
+        const maxAttempts = tabInfo.length; // Prevent infinite loop
+        let attempts = 0;
+
+        do {
+          if (direction === 'forward') {
+            index = (index + 1) % tabInfo.length;
+          } else {
+            index = index === 0 ? tabInfo.length - 1 : index - 1;
+          }
+          attempts++;
+        } while (tabInfo[index].disabled && attempts < maxAttempts);
+
+        return tabInfo[index].disabled ? currentIndex : index;
+      };
+
+      // Helper function to find first/last enabled tab
+      const findEnabledTabAtEnd = (fromStart: boolean): number => {
+        if (fromStart) {
+          for (let i = 0; i < tabInfo.length; i++) {
+            if (!tabInfo[i].disabled) return i;
+          }
+        } else {
+          for (let i = tabInfo.length - 1; i >= 0; i--) {
+            if (!tabInfo[i].disabled) return i;
+          }
+        }
+        return currentIndex; // Fallback to current if all disabled
+      };
+
+      switch (event.key) {
+        case 'ArrowRight':
+          if (orientation === 'horizontal') {
+            nextIndex = findNextEnabledTab(currentIndex, 'forward');
+            shouldPreventDefault = true;
+          }
+          break;
+        case 'ArrowLeft':
+          if (orientation === 'horizontal') {
+            nextIndex = findNextEnabledTab(currentIndex, 'backward');
+            shouldPreventDefault = true;
+          }
+          break;
+        case 'ArrowDown':
+          if (orientation === 'vertical') {
+            nextIndex = findNextEnabledTab(currentIndex, 'forward');
+            shouldPreventDefault = true;
+          }
+          break;
+        case 'ArrowUp':
+          if (orientation === 'vertical') {
+            nextIndex = findNextEnabledTab(currentIndex, 'backward');
+            shouldPreventDefault = true;
+          }
+          break;
+        case 'Home':
+          nextIndex = findEnabledTabAtEnd(true);
+          shouldPreventDefault = true;
+          break;
+        case 'End':
+          nextIndex = findEnabledTabAtEnd(false);
+          shouldPreventDefault = true;
+          break;
+      }
+
+      if (shouldPreventDefault && nextIndex !== currentIndex) {
+        event.preventDefault();
+        const newValue = tabInfo[nextIndex].value;
+        setValue(newValue);
+
+        // Focus the new tab
+        setTimeout(() => {
+          const newTab = document.getElementById(`tab-${newValue}`);
+          newTab?.focus();
+        }, 0);
+      }
+    };
 
     return (
       <div
@@ -195,6 +302,7 @@ const TabList = forwardRef<HTMLDivElement, TabListProps>(
         className={cn(tabListVariants({ variant, orientation }), className)}
         role="tablist"
         aria-orientation={orientation}
+        onKeyDown={handleKeyDown}
         {...props}
       >
         {children}
