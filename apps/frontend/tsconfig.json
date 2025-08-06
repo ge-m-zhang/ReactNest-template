@@ -29,7 +29,7 @@
 
     "paths": {
       "@frontend/*": ["./src/*"],
-      "@react-ui/*": ["../../packages/@react-ui/src/*"]
+      "@gmz/react-ui/*": ["../../packages/@react-ui/src/*"]
     }
   },
   "include": [

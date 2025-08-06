@@ -1,17 +1,17 @@
-# @react-ui
+# @gmz/react-ui
 
 A React UI component library built with TypeScript and Tailwind CSS.
 
 ## Installation
 
 ```bash
-npm install @react-ui
+npm install @gmz/react-ui
 ```
 
 ## Usage
 
 ```tsx
-import { Button, Alert, Badge, Box } from '@react-ui';
+import { Button, Alert, Badge, Box } from '@gmz/react-ui';
 
 function App() {
   return (
