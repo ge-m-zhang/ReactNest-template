@@ -199,11 +199,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           onChange={handleChange}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={
-            cn(
-              error && errorId,
-              helperText && !error && helperId,
-              showCharacterCount && countId,
-            ).trim() || undefined
+            [error && errorId, helperText && !error && helperId, showCharacterCount && countId]
+              .filter(Boolean)
+              .join(' ') || undefined
           }
           {...props}
         />

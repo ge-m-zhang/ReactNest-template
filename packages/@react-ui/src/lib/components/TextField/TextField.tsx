@@ -192,7 +192,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             onWheel={handleWheel}
             aria-invalid={error ? 'true' : 'false'}
             aria-describedby={
-              cn(error && errorId, helperText && !error && helperId).trim() || undefined
+              [error && errorId, helperText && !error && helperId].filter(Boolean).join(' ') ||
+              undefined
             }
             {...props}
           />
