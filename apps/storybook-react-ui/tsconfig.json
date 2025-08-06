@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@gmz/react-ui/*": ["../../packages/@react-ui/src/*"]
+      "@react-ui/*": ["../../packages/@react-ui/src/*"]
     },
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],

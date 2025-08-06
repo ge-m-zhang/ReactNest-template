@@ -6,7 +6,7 @@ import profileImage from '../assets/images/profile-img.png';
 import { userProfileState } from '../recoil/Object.recoil';
 import { useUserState } from '../utils/userHelpers';
 import ChatInterface from './ChatInterface';
-import { Box, Flex, Typography } from '@gmz/react-ui';
+import { Box, Flex, Typography } from '@react-ui';
 
 const ProfilePage: React.FC = () => {
   const { error, isLoading } = useUserState();

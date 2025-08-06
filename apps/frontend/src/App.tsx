@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import { ThemeProvider } from '@gmz/react-ui';
+import { ThemeProvider } from '@react-ui';
 import { LandingPage } from './pages/LandingPage';
 import ProfilePage from './pages/ProfilePage';
 
