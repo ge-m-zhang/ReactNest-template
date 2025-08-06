@@ -314,7 +314,12 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
     return (
       <div className="inline-flex items-center">
         <SwitchContext.Provider
-          value={{ size: size!, color: color!, checked: !!checked, disabled: !!disabled }}
+          value={{
+            size: size ?? 'medium',
+            color: color ?? 'primary',
+            checked: !!checked,
+            disabled: !!disabled,
+          }}
         >
           <SwitchContainer
             onClick={handleSwitchClick}
