@@ -273,10 +273,10 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
     },
     ref,
   ) => {
-    const [internalChecked, setInternalChecked] = useState<boolean>(checkedProp ?? false);
+    const [internalChecked, setInternalChecked] = useState<boolean>(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Use controlled or uncontrolled state
+    // Use controlled or uncontrolled state - pure derived state handles prop changes automatically
     const checked = checkedProp !== undefined ? checkedProp : internalChecked;
 
     const handleSwitchClick = (event: React.SyntheticEvent<HTMLDivElement>) => {
