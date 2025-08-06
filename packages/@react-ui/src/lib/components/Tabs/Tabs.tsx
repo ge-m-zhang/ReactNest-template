@@ -261,25 +261,3 @@ export const Tab = Object.assign(TabComponent, {
 
 // Alias for more intuitive naming
 export const Tabs = Tab;
-
-// Usage example:
-/*
-<Tab.Context defaultValue="tab1" variant="outlined">
-  <Tab.List>
-    <Tab value="tab1">Tab 1</Tab>
-    <Tab value="tab2">Tab 2</Tab>
-    <Tab value="tab3">Tab 3</Tab>
-  </Tab.List>
-  <Tab.Content>
-    <Tab.Panel value="tab1">
-      Content for tab 1
-    </Tab.Panel>
-    <Tab.Panel value="tab2">
-      Content for tab 2
-    </Tab.Panel>
-    <Tab.Panel value="tab3">
-      Content for tab 3
-    </Tab.Panel>
-  </Tab.Content>
-</Tab.Context>
-*/
