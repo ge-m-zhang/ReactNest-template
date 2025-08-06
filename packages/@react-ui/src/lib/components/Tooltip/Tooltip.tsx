@@ -209,15 +209,12 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     const tooltipRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-    const isMountedRef = useRef(false); // Ref-based mounted flag for reliable cleanup
 
     const isControlled = controlledOpen !== undefined;
     const isOpen = isControlled ? controlledOpen : internalOpen;
 
     const setOpen = (open: boolean) => {
-      // Prevent state updates if component is unmounted - more reliable than AbortController
-      if (!isMountedRef.current) return;
-
+      // React 18+ handles unmounted component state updates internally
       if (!isControlled) {
         setInternalOpen(open);
       }
@@ -233,7 +230,6 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
       if (delay > 0) {
         timeoutRef.current = setTimeout(() => {
-          // setOpen already handles mounted check - no race condition possible
           setOpen(true);
         }, delay);
       } else {
@@ -250,7 +246,6 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
       if (hideDelay > 0) {
         hideTimeoutRef.current = setTimeout(() => {
-          // setOpen already handles mounted check - no race condition possible
           setOpen(false);
         }, hideDelay);
       } else {
@@ -267,17 +262,12 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       }
     }, [isOpen, placement]);
 
-    // Mount effect with ref-based cleanup for reliable race condition prevention
+    // Mount effect with proper cleanup
     useEffect(() => {
-      // Set mounted flag immediately - no async operations
-      isMountedRef.current = true;
       setMounted(true);
 
       return () => {
-        // Set mounted flag to false immediately - prevents any race conditions
-        isMountedRef.current = false;
-
-        // Clear any pending timeouts
+        // Clear any pending timeouts - this is the proper cleanup approach
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
           timeoutRef.current = undefined;
