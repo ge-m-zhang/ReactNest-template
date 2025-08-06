@@ -2,6 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React, { forwardRef, useEffect, useId, useMemo, useRef } from 'react';
 import { cn } from '../../tools/classNames';
 import { getResizeStyle } from '../../tools/styleHelpers';
+import { useTextareaResize } from '../../tools/textareaHelpers';
 
 /**
  * TextArea Component
@@ -141,38 +142,27 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
     const characterCountState = isOverLimit ? 'error' : isNearLimit ? 'warning' : 'default';
 
-    // Track scroll height to avoid unnecessary recalculations
-    const scrollHeightRef = useRef<number | null>(null);
+    // Use textarea resize helpers for optimized performance
+    const { performResize, createDebouncedResize, cleanup } = useTextareaResize();
+    const debouncedResize = createDebouncedResize(16); // ~1 frame delay for smooth performance
 
     // Auto-resize functionality - optimized to avoid unnecessary DOM updates
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       if (autoResize) {
-        const textarea = e.target;
-        textarea.style.height = 'auto';
-        const newScrollHeight = textarea.scrollHeight;
-
-        // Only update if scrollHeight changed
-        if (scrollHeightRef.current !== newScrollHeight) {
-          textarea.style.height = `${newScrollHeight}px`;
-          scrollHeightRef.current = newScrollHeight;
-        }
+        performResize(e.target);
       }
       onChange?.(e);
     };
 
-    // Auto-resize effect for controlled components - optimized to avoid unnecessary recalculations
+    // Auto-resize effect for controlled components - debounced for performance
     useEffect(() => {
       if (autoResize && ref && 'current' in ref && ref.current) {
-        const textarea = ref.current;
-        // Only update if scrollHeight changed
-        textarea.style.height = 'auto';
-        const newScrollHeight = textarea.scrollHeight;
-        if (scrollHeightRef.current !== newScrollHeight) {
-          textarea.style.height = `${newScrollHeight}px`;
-          scrollHeightRef.current = newScrollHeight;
-        }
+        debouncedResize(ref.current);
       }
-    }, [value, autoResize, ref]);
+
+      // Cleanup debounce timeout on unmount
+      return cleanup;
+    }, [value, autoResize, ref, debouncedResize, cleanup]);
 
     return (
       <div className={cn('relative', fullWidth && 'w-full', wrapperClassName)}>
