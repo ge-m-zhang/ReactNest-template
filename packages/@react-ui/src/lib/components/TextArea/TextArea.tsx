@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import React, { forwardRef, useId } from 'react';
+import React, { forwardRef, useEffect, useId } from 'react';
 import { cn } from '../../tools/classNames';
 
 /**
@@ -151,7 +151,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     };
 
     // Auto-resize effect for controlled components
-    React.useEffect(() => {
+    useEffect(() => {
       if (autoResize && ref && 'current' in ref && ref.current) {
         const textarea = ref.current;
         textarea.style.height = 'auto';

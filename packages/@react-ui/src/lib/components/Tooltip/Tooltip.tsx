@@ -290,7 +290,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
         {React.cloneElement(children as React.ReactElement, {
           ref: triggerRef,
           ...triggerHandlers,
-          'aria-describedby': isOpen ? 'tooltip' : undefined,
+          'aria-describedby': isOpen ? tooltipId : undefined,
         })}
 
         {/* Tooltip portal - ReactDOM.createPortal for proper layering */}
