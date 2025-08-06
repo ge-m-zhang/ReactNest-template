@@ -10,8 +10,8 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@gmz/react-ui": ["packages/@react-ui/src/index.ts"],
-      "@gmz/react-ui/*": ["packages/@react-ui/src/*"]
+      "@gmzh/react-ui": ["packages/@react-ui/src/index.ts"],
+      "@gmzh/react-ui/*": ["packages/@react-ui/src/*"]
     }
   }
 }

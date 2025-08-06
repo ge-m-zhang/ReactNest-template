@@ -10,7 +10,7 @@
     "clean": "rm -rf storybook-static dist .turbo"
   },
   "dependencies": {
-    "@gmz/react-ui": "workspace:*",
+    "@gmzh/react-ui": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
