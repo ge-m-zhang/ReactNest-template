@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import React, { forwardRef, useEffect, useId, useMemo, useRef } from 'react';
+import React, { forwardRef, useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import { cn } from '../../tools/classNames';
 import { getResizeStyle } from '../../tools/styleHelpers';
 
@@ -144,19 +144,28 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
     const characterCountState = isOverLimit ? 'error' : isNearLimit ? 'warning' : 'default';
 
-    // Helper function to safely get textarea element from any ref type
-    const getTextareaElement = (): HTMLTextAreaElement | null => {
-      if (!ref) return null;
+    // Local ref for internal auto-resize functionality - works with any external ref type
+    const internalRef = useRef<HTMLTextAreaElement | null>(null);
 
-      // Handle RefObject (has .current property)
-      if (typeof ref === 'object' && ref !== null && 'current' in ref) {
-        return ref.current;
-      }
+    // Combined ref handler that forwards to external ref and stores locally
+    const combinedRef = useCallback(
+      (element: HTMLTextAreaElement | null) => {
+        // Store element in our internal ref for auto-resize functionality
+        internalRef.current = element;
 
-      // Callback refs don't provide a way to get the current element
-      // They're functions that get called with the element
-      return null;
-    };
+        // Forward to external ref (handle both RefObject and callback refs)
+        if (ref) {
+          if (typeof ref === 'function') {
+            // Callback ref
+            ref(element);
+          } else if (typeof ref === 'object' && ref !== null && 'current' in ref) {
+            // RefObject
+            (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
+          }
+        }
+      },
+      [ref],
+    );
 
     const debouncedResize = useMemo(() => {
       let timeoutId: ReturnType<typeof setTimeout>;
@@ -193,13 +202,10 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
     // Auto-resize effect for controlled components - debounced for performance
     useEffect(() => {
-      if (autoResize) {
-        const element = getTextareaElement();
-        if (element) {
-          debouncedResize(element);
-        }
+      if (autoResize && internalRef.current) {
+        debouncedResize(internalRef.current); // ✅ Always works - uses internal ref
       }
-    }, [value, autoResize, ref, debouncedResize]);
+    }, [value, autoResize, debouncedResize]);
 
     return (
       <div className={cn('relative', fullWidth && 'w-full', wrapperClassName)}>
@@ -215,7 +221,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
         {/* Textarea */}
         <textarea
-          ref={ref}
+          ref={combinedRef}
           id={textareaId}
           className={cn(
             textAreaVariants({
