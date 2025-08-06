@@ -208,14 +208,16 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       onChange?.(event);
     };
 
-    // Determine which icon to show
-    const iconToShow = indeterminate ? (
-      <IndeterminateIcon className="text-white" />
-    ) : icon ? (
-      React.cloneElement(icon as React.ReactElement, { className: 'text-white' })
-    ) : (
-      <DefaultCheckIcon className="text-white" />
-    );
+    // Helper function to determine which icon to show - clearer than nested ternary
+    const getIconToShow = () => {
+      if (indeterminate) {
+        return <IndeterminateIcon className="text-white" />;
+      } else if (icon) {
+        return React.cloneElement(icon as React.ReactElement, { className: 'text-white' });
+      } else {
+        return <DefaultCheckIcon className="text-white" />;
+      }
+    };
 
     return (
       <div className="inline-flex items-center">
@@ -266,7 +268,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               }),
             )}
           >
-            {iconToShow}
+            {getIconToShow()}
           </span>
         </div>
       </div>
