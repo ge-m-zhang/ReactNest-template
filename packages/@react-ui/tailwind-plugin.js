@@ -20,10 +20,18 @@ module.exports = plugin(
   // Plugin config - extends user's existing config
   {
     // IMPORTANT: Use content, not replace
-    content: [
-      // Only scan your package files
-      path.join(path.dirname(require.resolve('@gmzh/react-ui')), '**/*.{js,ts,jsx,tsx}'),
-    ],
+    content: (() => {
+      try {
+        // Only scan your package files
+        return [path.join(path.dirname(require.resolve('@gmzh/react-ui')), '**/*.{js,ts,jsx,tsx}')];
+      } catch (e) {
+        // @gmzh/react-ui not found; skip adding its content path
+        console.warn(
+          '[react-ui/tailwind-plugin] Warning: @gmzh/react-ui not found. Skipping content path.',
+        );
+        return [];
+      }
+    })(),
 
     theme: {
       // Use 'extend' to avoid conflicts
