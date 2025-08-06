@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useId } from 'react';
 import { cn } from '../../tools/classNames';
 
 /**
@@ -127,7 +127,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const state = error ? 'error' : stateProp || 'default';
 
     // Generate ID if not provided
-    const textareaId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const textareaId = id || `textarea-${generatedId}`;
     const helperId = `${textareaId}-helper`;
     const errorId = `${textareaId}-error`;
     const countId = `${textareaId}-count`;

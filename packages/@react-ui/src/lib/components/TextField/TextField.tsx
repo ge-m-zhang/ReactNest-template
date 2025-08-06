@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useId } from 'react';
 import { cn } from '../../tools/classNames';
 
 /**
@@ -140,7 +140,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const hasSymbol = Boolean(symbol);
 
     // Generate ID if not provided
-    const inputId = id || `textfield-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id || `textfield-${generatedId}`;
     const helperId = `${inputId}-helper`;
     const errorId = `${inputId}-error`;
 
