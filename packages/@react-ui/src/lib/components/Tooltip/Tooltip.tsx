@@ -282,6 +282,9 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       triggerHandlers.onTouchStart = showTooltip;
     }
 
+    // Generate a unique ID for accessibility and ARIA attributes
+    const [tooltipId] = useState(() => `tooltip-${Math.random().toString(36).substr(2, 9)}`);
+
     return (
       <>
         {/* Trigger element */}
@@ -303,7 +306,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
                   ref.current = node;
                 }
               }}
-              id="tooltip"
+              id={tooltipId}
               role="tooltip"
               className={cn(tooltipVariants({ variant, visible: isOpen }))}
               style={{ position: 'absolute' }}
