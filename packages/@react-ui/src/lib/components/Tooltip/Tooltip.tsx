@@ -207,8 +207,8 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     const tooltipId = `tooltip-${useId()}`;
     const triggerRef = useRef<HTMLElement>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
-    const timeoutRef = useRef<number>();
-    const hideTimeoutRef = useRef<number>();
+    const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+    const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
     const isControlled = controlledOpen !== undefined;
     const isOpen = isControlled ? controlledOpen : internalOpen;

@@ -75,7 +75,7 @@ export const useTextareaResize = (): {
   cleanup: () => void;
 } => {
   const scrollHeightRef = useRef<number | null>(null);
-  const debounceTimeoutRef = useRef<number>();
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Memoized resize function to avoid recreations
   const performResize = useCallback((textarea: HTMLTextAreaElement) => {
