@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@react-ui';
+import { ThemeProvider } from '@gmzh/react-ui';
 import React from 'react';
 
 import { Component } from './Component';
