@@ -25,5 +25,7 @@ function copyWithExtension(src, dest, oldExt, newExt) {
 }
 
 copyWithExtension(distCjs, dist, '.js', '.cjs');
-fs.rmSync(distCjs, { recursive: true, force: true });
+if (fs.existsSync(distCjs)) {
+  fs.rmSync(distCjs, { recursive: true, force: true });
+}
 console.log('CommonJS files renamed to .cjs');

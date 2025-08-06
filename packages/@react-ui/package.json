@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/ge-m-zhang/ReactNest-template.git",
@@ -19,8 +20,7 @@
     },
     "./lib/*": {
       "types": "./dist/lib/*",
-      "import": "./dist/lib/*",
-      "require": "./dist/lib/*.cjs"
+      "import": "./dist/lib/*"
     }
   },
   "scripts": {
