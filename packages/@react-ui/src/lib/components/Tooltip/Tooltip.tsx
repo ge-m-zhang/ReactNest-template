@@ -209,11 +209,15 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     const tooltipRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+    const isMountedRef = useRef(true); // Track mounted state to prevent updates on unmounted component
 
     const isControlled = controlledOpen !== undefined;
     const isOpen = isControlled ? controlledOpen : internalOpen;
 
     const setOpen = (open: boolean) => {
+      // Prevent state updates if component is unmounted
+      if (!isMountedRef.current) return;
+
       if (!isControlled) {
         setInternalOpen(open);
       }
@@ -223,9 +227,14 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     const showTooltip = () => {
       if (hideTimeoutRef.current) {
         clearTimeout(hideTimeoutRef.current);
+        hideTimeoutRef.current = undefined;
       }
       if (delay > 0) {
-        timeoutRef.current = setTimeout(() => setOpen(true), delay);
+        timeoutRef.current = setTimeout(() => {
+          if (isMountedRef.current) {
+            setOpen(true);
+          }
+        }, delay);
       } else {
         setOpen(true);
       }
@@ -234,9 +243,14 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     const hideTooltip = () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+        timeoutRef.current = undefined;
       }
       if (hideDelay > 0) {
-        hideTimeoutRef.current = setTimeout(() => setOpen(false), hideDelay);
+        hideTimeoutRef.current = setTimeout(() => {
+          if (isMountedRef.current) {
+            setOpen(false);
+          }
+        }, hideDelay);
       } else {
         setOpen(false);
       }
@@ -251,12 +265,24 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       }
     }, [isOpen, placement]);
 
-    // Mount effect
+    // Mount effect with comprehensive cleanup
     useEffect(() => {
       setMounted(true);
+      isMountedRef.current = true;
+
       return () => {
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+        // Mark component as unmounted to prevent state updates
+        isMountedRef.current = false;
+
+        // Clear any pending timeouts
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = undefined;
+        }
+        if (hideTimeoutRef.current) {
+          clearTimeout(hideTimeoutRef.current);
+          hideTimeoutRef.current = undefined;
+        }
       };
     }, []);
 
