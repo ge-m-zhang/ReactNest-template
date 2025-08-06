@@ -37,13 +37,7 @@ export const createSyntheticChangeEvent = <T extends HTMLInputElement>(
 ): React.ChangeEvent<T> => {
   if (!inputElement) {
     throw new Error(
-      `Cannot create synthetic change event: input element reference is ${
-        inputElement === null
-          ? 'null'
-          : typeof inputElement === 'undefined'
-          ? 'undefined'
-          : String(inputElement)
-      }`,
+      'Cannot create synthetic change event: input element reference is not available',
     );
   }
 
