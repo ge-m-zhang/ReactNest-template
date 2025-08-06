@@ -279,7 +279,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
     // Use controlled or uncontrolled state
     const checked = checkedProp !== undefined ? checkedProp : internalChecked;
 
-    const handleSwitchClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleSwitchClick = (event: React.SyntheticEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
 
@@ -329,7 +329,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
             onKeyDown={(e) => {
               if (e.key === ' ') {
                 e.preventDefault();
-                handleSwitchClick(e as any);
+                handleSwitchClick(e);
               }
             }}
           >

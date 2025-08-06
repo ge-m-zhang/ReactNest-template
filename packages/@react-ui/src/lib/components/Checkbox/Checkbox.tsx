@@ -187,7 +187,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     // Use controlled or uncontrolled state
     const checked = checkedProp !== undefined ? checkedProp : internalChecked;
 
-    const handleCheckboxClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleCheckboxClick = (event: React.SyntheticEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
 
@@ -247,7 +247,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           onKeyDown={(e) => {
             if (e.key === ' ') {
               e.preventDefault();
-              handleCheckboxClick(e as any);
+              handleCheckboxClick(e);
             }
           }}
         >
