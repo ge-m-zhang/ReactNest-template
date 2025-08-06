@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import React, { createContext, forwardRef, useContext, useRef, useState } from 'react';
 import { cn } from '../../tools/classNames';
+import { createSyntheticCheckboxChangeEvent } from '../../tools/formEventHelpers';
 
 /**
  * Switch Component
@@ -288,11 +289,11 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
 
         // Trigger the input's onChange event
         if (inputRef.current) {
-          const syntheticEvent = {
-            ...event,
-            target: { ...inputRef.current, checked: newChecked },
-            currentTarget: inputRef.current,
-          } as React.ChangeEvent<HTMLInputElement>;
+          const syntheticEvent = createSyntheticCheckboxChangeEvent(
+            event,
+            inputRef.current,
+            newChecked,
+          );
 
           if (onChange) {
             onChange(syntheticEvent);
