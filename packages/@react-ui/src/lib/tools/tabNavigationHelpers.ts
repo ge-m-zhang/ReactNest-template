@@ -151,6 +151,8 @@ export const handleTabKeyboardNavigation = (
 
     // Focus the new tab
     setTimeout(() => {
+      // todo: Consider validating or sanitizing the newValue parameter before using it in DOM queries
+      // in case of XSS attacks
       const newTab = document.getElementById(`tab-${newValue}`);
       newTab?.focus();
     }, 0);
