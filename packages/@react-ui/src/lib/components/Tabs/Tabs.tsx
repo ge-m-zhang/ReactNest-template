@@ -218,19 +218,18 @@ const TabList = forwardRef<HTMLDivElement, TabListProps>(
         startIndex: number,
         direction: 'forward' | 'backward',
       ): number => {
-        // Generate array of indices to check in the specified direction
-        const indices = Array.from({ length: tabInfo.length }, (_, i) => {
+        let idx = startIndex;
+        for (let i = 0; i < tabInfo.length; i++) {
           if (direction === 'forward') {
-            return (startIndex + 1 + i) % tabInfo.length;
+            idx = (idx + 1) % tabInfo.length;
           } else {
-            return (startIndex - 1 - i + tabInfo.length) % tabInfo.length;
+            idx = (idx - 1 + tabInfo.length) % tabInfo.length;
           }
-        });
-
-        // Find the first enabled tab index
-        const enabledIndex = indices.find((index) => !tabInfo[index].disabled);
-
-        return enabledIndex !== undefined ? enabledIndex : currentIndex;
+          if (!tabInfo[idx].disabled) {
+            return idx;
+          }
+        }
+        return startIndex;
       };
 
       // Helper function to find first/last enabled tab
