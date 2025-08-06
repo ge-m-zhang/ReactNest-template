@@ -2,7 +2,7 @@ import React from 'react';
 
 import googleIcon from '../../assets/icons/google-icon.png';
 import { environment } from '../../config/environments';
-import { Button } from '@gmz/react-ui';
+import { Button } from '@gmzh/react-ui';
 
 export const GoogleLoginButton: React.FC = () => {
   const { backendUrl } = environment.app;
