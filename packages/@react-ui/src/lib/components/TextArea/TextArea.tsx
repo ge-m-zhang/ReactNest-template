@@ -2,7 +2,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React, { forwardRef, useEffect, useId, useMemo, useRef } from 'react';
 import { cn } from '../../tools/classNames';
 import { getResizeStyle } from '../../tools/styleHelpers';
-import { useTextareaResize } from '../../tools/textareaHelpers';
 
 /**
  * TextArea Component
@@ -86,6 +85,9 @@ const characterCountVariants = cva('text-xs mt-1 text-right', {
   },
 });
 
+// Constants for better performance and maintainability
+const DEBOUNCE_DELAY = 16; // ~1 frame delay for smooth performance
+
 type TextAreaBaseProps = VariantProps<typeof textAreaVariants>;
 
 export interface TextAreaProps
@@ -142,16 +144,35 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
     const characterCountState = isOverLimit ? 'error' : isNearLimit ? 'warning' : 'default';
 
-    // Use textarea resize helpers for optimized performance
-    const { performResize, createDebouncedResize, cleanup } = useTextareaResize();
+    const debouncedResize = useMemo(() => {
+      let timeoutId: ReturnType<typeof setTimeout>;
 
-    // memoizing the debounced function with useCallback to prevent unnecessary re-renders
-    const debouncedResize = useMemo(() => createDebouncedResize(16), [createDebouncedResize]); // ~1 frame delay for smooth performance
+      return (element: HTMLTextAreaElement) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          if (element) {
+            // Reset height to auto to get the correct scrollHeight
+            element.style.height = 'auto';
+            element.style.height = `${element.scrollHeight}px`;
+          }
+        }, DEBOUNCE_DELAY);
+      };
+    }, []);
+
+    // Direct resize function for immediate use (non-debounced)
+    const performResize = useMemo(() => {
+      return (element: HTMLTextAreaElement) => {
+        if (element) {
+          element.style.height = 'auto';
+          element.style.height = `${element.scrollHeight}px`;
+        }
+      };
+    }, []);
 
     // Auto-resize functionality - optimized to avoid unnecessary DOM updates
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       if (autoResize) {
-        performResize(e.target);
+        performResize(e.target); // Direct resize on user input for immediate feedback
       }
       onChange?.(e);
     };
@@ -159,12 +180,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     // Auto-resize effect for controlled components - debounced for performance
     useEffect(() => {
       if (autoResize && ref && 'current' in ref && ref.current) {
-        debouncedResize(ref.current);
+        debouncedResize(ref.current); // ✅ Always the same stable function
       }
-
-      // Cleanup debounce timeout on unmount
-      return cleanup;
-    }, [value, autoResize, ref, debouncedResize, cleanup]);
+    }, [value, autoResize, ref, debouncedResize]);
 
     return (
       <div className={cn('relative', fullWidth && 'w-full', wrapperClassName)}>
