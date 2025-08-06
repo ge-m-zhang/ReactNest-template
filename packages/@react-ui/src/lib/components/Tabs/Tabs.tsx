@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import React, { createContext, forwardRef, useContext, useRef, useState } from 'react';
 import { cn } from '../../tools/classNames';
+import { getTabInfo, handleTabKeyboardNavigation } from '../../tools/tabNavigationHelpers';
 
 /**
  * Tab Component System
@@ -189,110 +190,10 @@ const TabList = forwardRef<HTMLDivElement, TabListProps>(
   ({ className, orientation = 'horizontal', children, ...props }, ref) => {
     const { variant, value, setValue } = useContext(TabContext);
 
-    // Get all tab values and their disabled states from children
-    const getTabInfo = (): Array<{ value: string; disabled: boolean }> => {
-      const tabInfo: Array<{ value: string; disabled: boolean }> = [];
-      React.Children.forEach(children, (child) => {
-        if (React.isValidElement(child) && child.props.value) {
-          tabInfo.push({
-            value: child.props.value,
-            disabled: Boolean(child.props.disabled),
-          });
-        }
-      });
-      return tabInfo;
-    };
-
     // Handle keyboard navigation
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-      const tabInfo = getTabInfo();
-      const currentIndex = tabInfo.findIndex((tab) => tab.value === value);
-
-      if (currentIndex === -1) return;
-
-      let nextIndex = currentIndex;
-      let shouldPreventDefault = false;
-
-      // Helper function to find next non-disabled tab
-      const findNextEnabledTab = (
-        startIndex: number,
-        direction: 'forward' | 'backward',
-      ): number => {
-        let idx = startIndex;
-        for (let i = 0; i < tabInfo.length; i++) {
-          if (direction === 'forward') {
-            idx = (idx + 1) % tabInfo.length;
-          } else {
-            idx = (idx - 1 + tabInfo.length) % tabInfo.length;
-          }
-          if (!tabInfo[idx].disabled) {
-            return idx;
-          }
-        }
-        return startIndex;
-      };
-
-      // Helper function to find first/last enabled tab
-      const findEnabledTabAtEnd = (fromStart: boolean): number => {
-        const enabledIndex = fromStart
-          ? tabInfo.findIndex((tab) => !tab.disabled)
-          : tabInfo
-              .slice()
-              .reverse()
-              .findIndex((tab) => !tab.disabled);
-
-        if (enabledIndex === -1) return currentIndex; // Fallback if all disabled
-
-        // For reversed search, convert back to original index
-        return fromStart ? enabledIndex : tabInfo.length - 1 - enabledIndex;
-      };
-
-      switch (event.key) {
-        case 'ArrowRight':
-          if (orientation === 'horizontal') {
-            nextIndex = findNextEnabledTab(currentIndex, 'forward');
-            shouldPreventDefault = true;
-          }
-          break;
-        case 'ArrowLeft':
-          if (orientation === 'horizontal') {
-            nextIndex = findNextEnabledTab(currentIndex, 'backward');
-            shouldPreventDefault = true;
-          }
-          break;
-        case 'ArrowDown':
-          if (orientation === 'vertical') {
-            nextIndex = findNextEnabledTab(currentIndex, 'forward');
-            shouldPreventDefault = true;
-          }
-          break;
-        case 'ArrowUp':
-          if (orientation === 'vertical') {
-            nextIndex = findNextEnabledTab(currentIndex, 'backward');
-            shouldPreventDefault = true;
-          }
-          break;
-        case 'Home':
-          nextIndex = findEnabledTabAtEnd(true);
-          shouldPreventDefault = true;
-          break;
-        case 'End':
-          nextIndex = findEnabledTabAtEnd(false);
-          shouldPreventDefault = true;
-          break;
-      }
-
-      if (shouldPreventDefault && nextIndex !== currentIndex) {
-        event.preventDefault();
-        const newValue = tabInfo[nextIndex].value;
-        setValue(newValue);
-
-        // Focus the new tab
-        setTimeout(() => {
-          const newTab = document.getElementById(`tab-${newValue}`);
-          newTab?.focus();
-        }, 0);
-      }
+      const tabInfo = getTabInfo(children);
+      handleTabKeyboardNavigation(event, tabInfo, value, orientation, setValue);
     };
 
     return (
