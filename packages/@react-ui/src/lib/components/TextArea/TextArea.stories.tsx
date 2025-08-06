@@ -68,9 +68,9 @@ export const SimpleResizeTest: Story = {
           <h4 className="font-semibold mb-3 text-center">🔵 Both Directions</h4>
           <TextArea
             resizable={true}
-            placeholder="Drag me BOTH ways! ↕️↔️
+            placeholder={`Drag me BOTH ways! ↕️↔️
 
-Try dragging the corner handle in any direction."
+Try dragging the corner handle in any direction.`}
             rows={4}
             className="w-full border-2 border-blue-400"
           />
