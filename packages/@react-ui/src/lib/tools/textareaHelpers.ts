@@ -44,7 +44,7 @@ export const createDebouncedFunction = <T extends (...args: any[]) => void>(
   debouncedFn: T;
   cleanup: () => void;
 } => {
-  let timeoutId: number | undefined;
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
   const debouncedFn = ((...args: Parameters<T>) => {
     if (timeoutId) {

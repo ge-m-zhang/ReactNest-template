@@ -144,6 +144,20 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
     const characterCountState = isOverLimit ? 'error' : isNearLimit ? 'warning' : 'default';
 
+    // Helper function to safely get textarea element from any ref type
+    const getTextareaElement = (): HTMLTextAreaElement | null => {
+      if (!ref) return null;
+
+      // Handle RefObject (has .current property)
+      if (typeof ref === 'object' && ref !== null && 'current' in ref) {
+        return ref.current;
+      }
+
+      // Callback refs don't provide a way to get the current element
+      // They're functions that get called with the element
+      return null;
+    };
+
     const debouncedResize = useMemo(() => {
       let timeoutId: ReturnType<typeof setTimeout>;
 
@@ -179,8 +193,11 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
     // Auto-resize effect for controlled components - debounced for performance
     useEffect(() => {
-      if (autoResize && ref && 'current' in ref && ref.current) {
-        debouncedResize(ref.current); // ✅ Always the same stable function
+      if (autoResize) {
+        const element = getTextareaElement();
+        if (element) {
+          debouncedResize(element);
+        }
       }
     }, [value, autoResize, ref, debouncedResize]);
 
