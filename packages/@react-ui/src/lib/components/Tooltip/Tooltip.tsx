@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { cn } from '../../tools/classNames';
+import ReactDOM from 'react-dom';
 
 /**
  * Tooltip Component
@@ -100,7 +101,10 @@ export interface TooltipProps extends Omit<TooltipBaseProps, 'visible'> {
   tooltipProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
-// Simple positioning function - in a real implementation, you'd use a library like @floating-ui/react
+// Custom positioning implementation provides basic tooltip positioning
+// with full control over behavior and minimal dependencies.
+// For advanced features like collision detection and auto-flipping,
+// @floating-ui/react could be considered as a future enhancement.
 const getTooltipPosition = (
   trigger: HTMLElement,
   tooltip: HTMLElement,
@@ -287,25 +291,29 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
           'aria-describedby': isOpen ? 'tooltip' : undefined,
         })}
 
-        {/* Tooltip portal - in a real implementation, use ReactDOM.createPortal */}
-        <div
-          ref={(node) => {
-            (tooltipRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-            if (typeof ref === 'function') {
-              ref(node);
-            } else if (ref) {
-              ref.current = node;
-            }
-          }}
-          id="tooltip"
-          role="tooltip"
-          className={cn(tooltipVariants({ variant, visible: isOpen }))}
-          style={{ position: 'absolute' }}
-          {...tooltipProps}
-        >
-          {content}
-          {arrow && <div className={cn(arrowVariants({ variant, placement }))} />}
-        </div>
+        {/* Tooltip portal - ReactDOM.createPortal for proper layering */}
+        {typeof window !== 'undefined' &&
+          ReactDOM.createPortal(
+            <div
+              ref={(node) => {
+                (tooltipRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+                if (typeof ref === 'function') {
+                  ref(node);
+                } else if (ref) {
+                  ref.current = node;
+                }
+              }}
+              id="tooltip"
+              role="tooltip"
+              className={cn(tooltipVariants({ variant, visible: isOpen }))}
+              style={{ position: 'absolute' }}
+              {...tooltipProps}
+            >
+              {content}
+              {arrow && <div className={cn(arrowVariants({ variant, placement }))} />}
+            </div>,
+            document.body,
+          )}
       </>
     );
   },

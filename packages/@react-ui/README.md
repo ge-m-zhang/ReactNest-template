@@ -243,7 +243,6 @@ This package is built with modern tools and best practices:
 - `class-variance-authority` - Variant-based component styling
 - `tailwind-merge` - Intelligent Tailwind class merging
 - `@headlessui/react` - Unstyled accessible components
-- `@floating-ui/react` - Positioning for tooltips and popovers
 
 ### Scripts
 
