@@ -146,7 +146,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const { performResize, createDebouncedResize, cleanup } = useTextareaResize();
 
     // memoizing the debounced function with useCallback to prevent unnecessary re-renders
-    const debouncedResize = useMemo(() => createDebouncedResize(16), [createDebouncedResize]); // ~1 frame delay for smooth performance // ~1 frame delay for smooth performance
+    const debouncedResize = useMemo(() => createDebouncedResize(16), [createDebouncedResize]); // ~1 frame delay for smooth performance
 
     // Auto-resize functionality - optimized to avoid unnecessary DOM updates
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
