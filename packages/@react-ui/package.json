@@ -24,7 +24,7 @@
       "types": "./dist/lib/*",
       "import": "./dist/lib/*"
     },
-    "./src/lib/components/*/": "./src/lib/components/*/"
+    "./src/*": "./src/*"
   },
   "scripts": {
     "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run fix:cjs && npm run build:css && npm run copy:plugin",
