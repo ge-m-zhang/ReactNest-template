@@ -12,9 +12,15 @@ const path = require('path');
 const DIST_DIR = path.resolve(__dirname, '..', 'dist');
 const COMPONENTS_DIR = path.join(DIST_DIR, 'lib', 'components');
 const STORIES_OUT_DIR = path.join(DIST_DIR, 'lib', 'stories');
+const STORIES_JS_REGEX = /\.stories\.js$/;
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function moduleSpecifierWithoutJsExtension(specifier) {
+  // Normalize to module id without file extension for TS declaration re-exports
+  return specifier.replace(/\.(mjs|cjs|js)$/i, '');
 }
 
 function scanForStoryModules() {
@@ -25,7 +31,7 @@ function scanForStoryModules() {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         walk(full);
-      } else if (/\.stories\.js$/.test(entry.name)) {
+      } else if (STORIES_JS_REGEX.test(entry.name)) {
         storyFiles.push(full);
       }
     }
@@ -58,13 +64,8 @@ function build() {
     const content = `export * from '${importTarget}';\nexport { default } from '${importTarget}';\n`;
     fs.writeFileSync(outFile, content);
     // Minimal .d.ts stub to aid TS resolution for re-exports
-    const dts = `export * from '${importTarget.replace(
-      /\.js$/,
-      '',
-    )}';\nimport defaultExport from '${importTarget.replace(
-      /\.js$/,
-      '',
-    )}';\nexport default defaultExport;\n`;
+    const moduleId = moduleSpecifierWithoutJsExtension(importTarget);
+    const dts = `export * from '${moduleId}';\nimport defaultExport from '${moduleId}';\nexport default defaultExport;\n`;
     fs.writeFileSync(typesOutFile, dts);
 
     named.push(base.replace(/\.stories\.js$/, ''));
