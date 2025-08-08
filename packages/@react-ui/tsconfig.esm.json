@@ -4,5 +4,6 @@
     "module": "ESNext",
     "outDir": "./dist",
     "declaration": true
-  }
+  },
+  "exclude": ["node_modules", "dist", "**/*.test.tsx", "**/*.stories.ts", "**/*.stories.tsx"]
 }
