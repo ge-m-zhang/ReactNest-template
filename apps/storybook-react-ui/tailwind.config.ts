@@ -6,7 +6,8 @@ const config: Config = {
   ...baseConfig,
   content: [
     './src/**/*.{js,ts,jsx,tsx,mdx}',
-    '../../packages/@react-ui/src/**/*.{js,ts,jsx,tsx,mdx}',
+    // Scan compiled package output in node_modules to enable class generation for package styles
+    './node_modules/@gmzh/react-ui/dist/**/*.{js,ts,jsx,tsx,mdx}',
     './.storybook/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
