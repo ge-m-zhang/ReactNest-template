@@ -8,7 +8,7 @@ const config: StorybookConfig = {
     // consume stories from the installed @gmzh/react-ui package
     `${path.resolve(
       __dirname,
-      '../node_modules/@gmzh/react-ui/dist/lib/stories',
+      '../node_modules/@gmzh/react-ui/dist/lib/components',
     )}/**/*.stories.@(js|jsx|ts|tsx|mjs|cjs)`,
     // No local stories; only render package stories
   ],
