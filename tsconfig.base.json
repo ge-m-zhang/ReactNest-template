@@ -8,10 +8,6 @@
     "strict": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
-    "paths": {
-      "@gmzh/react-ui": ["packages/@react-ui/src/index.ts"],
-      "@gmzh/react-ui/*": ["packages/@react-ui/src/*"]
-    }
+    "baseUrl": "."
   }
 }

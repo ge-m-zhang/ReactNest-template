@@ -5,10 +5,18 @@ import path from 'path';
 
 const config: StorybookConfig = {
   stories: [
-    '../../../packages/@react-ui/src/**/*.stories.@(js|jsx|ts|tsx)',
-    'src/**/*.stories.@(js|jsx|ts|tsx)',
+    // consume stories from the installed @gmzh/react-ui package
+    `${path.resolve(
+      __dirname,
+      '../node_modules/@gmzh/react-ui/dist/lib/components',
+    )}/**/*.stories.@(js|jsx|ts|tsx|mjs|cjs)`,
+    // No local stories; only render package stories
   ],
-  addons: ['@storybook/addon-essentials', '@storybook/addon-links', '@storybook/addon-interactions'],
+  addons: [
+    '@storybook/addon-essentials',
+    '@storybook/addon-links',
+    '@storybook/addon-interactions',
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},
@@ -18,13 +26,7 @@ const config: StorybookConfig = {
   },
   viteFinal: async (config) => {
     const { mergeConfig } = await import('vite');
-    return mergeConfig(config, {
-      resolve: {
-        alias: {
-          '@react-ui': path.resolve(__dirname, '../../../packages/@react-ui/src'),
-        },
-      },
-    });
+    return mergeConfig(config, {});
   },
 };
 

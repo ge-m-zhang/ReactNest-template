@@ -27,12 +27,13 @@
     "./src/*": "./src/*"
   },
   "scripts": {
-    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run fix:cjs && npm run build:css && npm run copy:plugin",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run fix:cjs && npm run build:css && npm run copy:plugin && npm run bundle:stories",
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "fix:cjs": "node scripts/fix-cjs-extensions.js",
     "build:css": "tailwindcss -i ./src/lib/system/globals.css -o ./dist/styles.css --minify",
     "copy:plugin": "cp tailwind-plugin.js dist/",
+    "bundle:stories": "tsc --project tsconfig.stories.json",
     "dev": "npm run dev:ts",
     "dev:ts": "tsc --watch",
     "dev:css": "tailwindcss -i ./src/lib/system/globals.css -o ./dist/styles.css --watch",
@@ -60,8 +61,6 @@
   },
   "files": [
     "dist/**/*",
-    "src/**/*.stories.tsx",
-    "src/**/*.stories.ts",
     "tailwind-plugin.js",
     "README.md"
   ]
